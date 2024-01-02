@@ -72,7 +72,7 @@ include_once "includes/header.php";
                                                                     <a href="printbarcode.php?id=' . $row->pid . '" class="btn btn-primary btn-xs" role="button"><span class="fa fa-barcode" style="color:#ffffff" data-toggle="tooltip" title="Printo Barcodin"></span></a>
                                                                     <a href="viewproduct.php?id=' . $row->pid . '" class="btn btn-warning btn-xs" role="button"><span class="fa fa-eye" style="color:#ffffff" data-toggle="tooltip" title="View Produkt"></span></a>
                                                                     <a href="editproduct.php?id=' . $row->pid . '" class="btn btn-success btn-xs" role="button"><span class="fa fa-edit" style="color:#ffffff" data-toggle="tooltip" title="Ndrysho Produktin"></span></a>
-                                                                    <button id=' . $row->pid . ' class="btn btn-danger btn-xs"><span class="fa fa-trash-alt" style="color:#ffffff" data-toggle="tooltip" title="Fshije"></span></button>
+                                                                    <button id=' . $row->pid . ' class="btn btn-danger btn-xs btndelete"><span class="fa fa-trash-alt" style="color:#ffffff" data-toggle="tooltip" title="Fshije"></span></button>
                                                                 </div>
                                                             </td>
                                                         </tr>
@@ -125,7 +125,47 @@ include_once "includes/footer.php";
     });
 </script>
 <script>
-    $(document).ready(function(){
-        $('[data-toggle="tooltip"]').tooltip(); 
+    $(document).ready(function() {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
+
+<script>
+    $(document).ready(function() {
+        $('.btndelete').click(function() {
+            var tdt = $(this);
+            var id = $(this).attr("id");
+
+
+            Swal.fire({
+                title: "Deshironi ta Fshini Produktin?",
+                text: "Produkti i Fshire nuk mund te kthehet!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "PO Fshije"
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    $.ajax({
+                        url: 'productdelete.php',
+                        type: 'post',
+                        data: {
+                            pidd: id
+                        },
+                        success: function(data) {
+                            tdh.parents('tr').hide();
+                        }
+                    });
+                    Swal.fire({
+                        title: "Deleted!",
+                        text: "Your file has been deleted.",
+                        icon: "success"
+                    });
+                }
+            });
+
+        });
     });
 </script>
