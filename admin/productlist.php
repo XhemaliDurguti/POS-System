@@ -69,7 +69,7 @@ include_once "includes/header.php";
                                                             <td><image src="../productimage/' . $row->image . '" class="img-rounded" width="40" height="40"></td>
                                                             <td>
                                                                 <div class="btn-group">
-                                                                    <a href="printbarcode.php?id=' . $row->pid . '" class="btn btn-primary btn-xs" role="button"><span class="fa fa-barcode" style="color:#ffffff" data-toggle="tooltip" title="Printo Barcodin"></span></a>
+                                                                    <a href="printbarcode.php?id=' . $row->pid . '" class="btn btn-dark btn-xs" role="button"><span class="fa fa-barcode" style="color:#ffffff" data-toggle="tooltip" title="Printo Barcodin"></span></a>
                                                                     <a href="viewproduct.php?id=' . $row->pid . '" class="btn btn-warning btn-xs" role="button"><span class="fa fa-eye" style="color:#ffffff" data-toggle="tooltip" title="View Produkt"></span></a>
                                                                     <a href="editproduct.php?id=' . $row->pid . '" class="btn btn-success btn-xs" role="button"><span class="fa fa-edit" style="color:#ffffff" data-toggle="tooltip" title="Ndrysho Produktin"></span></a>
                                                                     <button id=' . $row->pid . ' class="btn btn-danger btn-xs btndelete"><span class="fa fa-trash-alt" style="color:#ffffff" data-toggle="tooltip" title="Fshije"></span></button>
