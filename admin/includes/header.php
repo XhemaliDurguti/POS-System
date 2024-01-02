@@ -225,7 +225,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             <a href="addproduct.php" class="nav-link">
                                 <i class="nav-icon fas fa-edit"></i>
                                 <p>
-                                    Produktet
+                                    Regjistro Produktin
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="productlist.php" class="nav-link">
+                                <i class="nav-icon fas fa-list"></i>
+                                <p>
+                                    Tabela Produkteve
                                 </p>
                             </a>
                         </li>
