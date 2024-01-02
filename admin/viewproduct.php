@@ -52,9 +52,10 @@ include_once 'barcode/barcode128.php';
                                         <li class="list-group-item"><b>Produkti </b><span class="badge badge-warning float-right">'.$row->product. '</span></li>
                                         <li class="list-group-item"><b>Kategoria </b><span class="badge badge-success float-right">'.$row->category. '</span></li>
                                         <li class="list-group-item"><b>Pershkrimi </b><span class="badge badge-primary float-right">'.$row->description. '</span></li>
-                                        <li class="list-group-item"><b>Cmimi Blerjes </b><span class="badge badge-danger float-right">'.$row->purchaseprice. '</span></li>
-                                        <li class="list-group-item"><b>Cmimi Shitjes</b> <span class="badge badge-dark float-right">'.$row->salesprice. '</span></li>
-                                        <li class="list-group-item"><b>Fitimi Ne Produkt</b><span class="badge badge-dark float-right">' . number_format($row->salesprice - $row->purchaseprice,2). '</span></li>
+                                        <li class="list-group-item"><b>Sasia Depo </b><span class="badge badge-dark float-right">' . $row->stock . '</span></li>
+                                        <li class="list-group-item"><b>Cmimi Blerjes </b><span class="badge badge-danger float-right">'.$row->purchaseprice. ' &#8364;</span></li>
+                                        <li class="list-group-item"><b>Cmimi Shitjes</b> <span class="badge badge-dark float-right">'.$row->salesprice. ' &#8364;</span></li>
+                                        <li class="list-group-item"><b>Fitimi Ne Produkt</b><span class="badge badge-dark float-right">' . number_format($row->salesprice - $row->purchaseprice,2). ' &#8364;</span></li>
                                     </ul>
                                 </div>
                                 <div class="col-md-6">
