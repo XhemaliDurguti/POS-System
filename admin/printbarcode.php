@@ -77,7 +77,7 @@ include_once "includes/header.php";
                                             <div class="form-group">
                                                 <label class="control-label col-sm-2" for="print_qty">Sasia Barkodit</label>
                                                 <div class="col-sm-10">
-                                                    <input autocomplete="OFF" type="print_qty" class="form-control" id="print_qty" name="print_qty">
+                                                    <input autocomplete="OFF" type="print_qty" class="form-control" id="print_qty" name="print_qty" value="1">
                                                 </div>
                                             </div>
 
