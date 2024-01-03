@@ -29,20 +29,20 @@ if (isset($_POST['btnsave'])) {
     }
 }
 
-if(isset($_POST['btnupdate'])) {
+if (isset($_POST['btnupdate'])) {
     $zid = $_POST['zid'];
     $zperqindje = $_POST['txtzbritjaP'];
     $zmoney = $_POST['txtzbritjaM'];
     $zbritja = $_POST['txtzbritja'];
 
-    if(empty($zperqindje)) {
+    if (empty($zperqindje)) {
         $_SESSION['status'] = "Nuk i keni plotesuar hapisrat e kerkuara!";
         $_SESSION['status_code'] = "warning";
-    }else {
-        $update = $pdo->prepare("update tbl_zbritja set zbritjaPerqind=:zp,zbritjaPare=:zm,VleraZbritjes=:vz where zid =".$zid);
-        $update->bindParam(':zp',$zperqindje);
-        $update->bindParam(':zm',$zmoney);
-        $update->bindParam(':vz',$zbritja);
+    } else {
+        $update = $pdo->prepare("update tbl_zbritja set zbritjaPerqind=:zp,zbritjaPare=:zm,VleraZbritjes=:vz where zid =" . $zid);
+        $update->bindParam(':zp', $zperqindje);
+        $update->bindParam(':zm', $zmoney);
+        $update->bindParam(':vz', $zbritja);
 
         if ($update->execute()) {
             $_SESSION['status'] = "Zbritja u ndryshua me sukses!!";
@@ -81,28 +81,28 @@ if(isset($_POST['btnupdate'])) {
                 <div class="card-body">
                     <form action="" method="post">
                         <div class="row">
-                            <?php 
-                                if(isset($_POST['btnedit'])) {
-                                    $select = $pdo->prepare("select * from tbl_zbritja where zid = ".$_POST['btnedit']);
-                                    $select->execute();
-                                    if ($select) {
-                                        $row = $select->fetch(PDO::FETCH_OBJ);
+                            <?php
+                            if (isset($_POST['btnedit'])) {
+                                $select = $pdo->prepare("select * from tbl_zbritja where zid = " . $_POST['btnedit']);
+                                $select->execute();
+                                if ($select) {
+                                    $row = $select->fetch(PDO::FETCH_OBJ);
                                     echo '<div class="col-md-4">
                                 <div class="card-body">
                                     <div class="form-group">
                                         <label>Zbritja(%)</label>
-                                        <input type="hidden" class="form-control" placeholder="zid" name="zid" value="'.$row->zid.'"/>
-                                        <input type="text" class="form-control" placeholder="Vlera Zbritjes ne %" value="'.$row->zbritjaPerqind.'"name="txtzbritjaP">
+                                        <input type="hidden" class="form-control" placeholder="zid" name="zid" value="' . $row->zid . '"/>
+                                        <input type="text" class="form-control" placeholder="Vlera Zbritjes ne %" value="' . $row->zbritjaPerqind . '"name="txtzbritjaP">
                                     </div>
                                     <div class="form-group">
                                         <label>Zbritja ne Pare</label>
                                         <input type="hidden" class="form-control" placeholder="id" name="catid" />
-                                        <input type="text" class="form-control" placeholder="Vlera Zbritjes ne Kesh" name="txtzbritjaM" value="'.$row->zbritjaPare.'">
+                                        <input type="text" class="form-control" placeholder="Vlera Zbritjes ne Kesh" name="txtzbritjaM" value="' . $row->zbritjaPare . '">
                                     </div>
                                     <div class="form-group">
                                         <label>Zbritja</label>
                                         <input type="hidden" class="form-control" placeholder="id" name="catid" />
-                                        <input type="text" class="form-control" placeholder="Zbritja Finale" name="txtzbritja" value="'.$row->VleraZbritjes.'">
+                                        <input type="text" class="form-control" placeholder="Zbritja Finale" name="txtzbritja" value="' . $row->VleraZbritjes . '">
                                     </div>
                                 </div>
                                 <!-- /.card-body -->
@@ -112,9 +112,9 @@ if(isset($_POST['btnupdate'])) {
                                 </div>
 
                             </div>';
-                                    }
-                                }else {
-                                    echo '<div class="col-md-4">
+                                }
+                            } else {
+                                echo '<div class="col-md-4">
                                 <div class="card-body">
                                     <div class="form-group">
                                         <label>Zbritja(%)</label>
@@ -138,11 +138,11 @@ if(isset($_POST['btnupdate'])) {
                                 </div>
 
                             </div>';
-                                }
+                            }
                             ?>
-                            
+
                             <div class="col-md-8">
-                                <table id="tbl_category" class="table table-striped table-hover">
+                                <table id="tbl_discount" class="table table-striped table-hover">
                                     <thead>
                                         <tr>
                                             <td>#</td>
@@ -194,3 +194,8 @@ if(isset($_POST['btnupdate'])) {
 <?php
 include_once 'includes/footer.php';
 ?>
+<script>
+    $(document).ready(function() {
+        $('#tbl_discount').DataTable();
+    });
+</script>
