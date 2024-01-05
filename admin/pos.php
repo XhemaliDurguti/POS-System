@@ -4,6 +4,18 @@ session_start();
 
 
 include_once "includes/header.php";
+
+function fill_product($pdo) {
+    $output = '';
+    $select=$pdo->prepare("select * from tbl_product order by product desc");
+    $select->execute();
+
+    $result = $select->fetchAll();
+    foreach($result as $row) {
+        $output .= '<option value="'.$row["pid"].'">'.$row["product"].'</option>';
+    }
+    return $output;
+}
 ?>
 <style type="text/css">
     .tableFixedHead {
@@ -69,14 +81,9 @@ include_once "includes/header.php";
                                         </div>
                                         <input type="text" class="form-control" placeholder="Skano Barkodin" id="txtbarcode_id">
                                     </div>
-                                    <select class="form-control select2" style="width: 100%;">
-                                        <option selected="selected">Alabama</option>
-                                        <option>Alaska</option>
-                                        <option>California</option>
-                                        <option>Delaware</option>
-                                        <option>Tennessee</option>
-                                        <option>Texas</option>
-                                        <option>Washington</option>
+                                    <select class="form-control select2" data-dropdown-css-class="select2-purple" style="width: 100%;">
+                                        <option></option>
+                                        <?php echo fill_product($pdo);?>
                                     </select>
 
                                     <hr />

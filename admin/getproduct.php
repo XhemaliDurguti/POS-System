@@ -1,10 +1,10 @@
 <?php 
     include_once '../include/db.php';
 
-    $produtid = $_GET["id"];
+    $productid = $_GET["id"];
     $barcode = $_GET["id"];
 
-    $select = $pdo->prepare("select * from tbl_product where barcode =$barcode");
+    $select = $pdo->prepare("select * from tbl_product where barcode =$barcode OR product = $productid");
     $select->execute();
 
     $row = $select->fetch(PDO::FETCH_ASSOC);
