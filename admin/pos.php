@@ -244,8 +244,8 @@ include_once "includes/footer.php";
                         var actualqty = parseInt($('#qty_id' + data["pid"]).val()) + 1;
                         $('#qty_id' + data["pid"]).val(actualqty);
 
-                        var saleprice = parseInt(actualqty) * data["saleprice"];
-
+                        var saleprice = parseInt(actualqty) * data["salesprice"];
+                        // console.log(saleprice);
                         $('#saleprice_id' + data["pid"]).html(saleprice);
                         $('#saleprice_idd' + data["pid"]).val(saleprice);
 
@@ -261,10 +261,10 @@ include_once "includes/footer.php";
                                 '<td style="text-align:left;vertical-align:middle; font-size:17px;"><class="form-control product_c" name="product_arr[]"<span class="badge badge-dark">' + product + '</span><input type="hidden" class="form-control pid" name="pid_arr[]" value="' + pid + '"> </td>' +
                                 '<td style = "text-align:left;vertical-align:middle; font-size:17px;"><span class="badge badge-primary stocklbl" name="stock_arr[]" id="stock_id' + pid + '">' + stock + '</span><input type="hidden" class="form-control stock_c" name="stock_c_arr[]" id="stock_idd' + pid + '" value="' + stock + '"></td>' +
                                 '<td style = "text-align:left;vertical-align:middle; font-size:17px;"><span class="badge badge-primary price" name="price_arr[]" id="price_id' + pid + '">' + saleprice + '</span><input type="hidden" class="form-control price_c" name="price_c_arr[]" id="price_idd' + pid + '" value="' + saleprice + '"></td>' +
-                                '<td><input type="text" class="form-control qty" name="quantity_arr[]" id="qty" value="' + 1 + '" size="1"></td>' +
-                                '<td style = "text-align:left;vertical-align:middle; font-size:17px;"><span class="badge badge-danger totalamt" name="netamt_arr[]" id="saleprice_id' + pid + '">' + saleprice + '</span><input type="hidden" class="form-control saleprice" name="saleprice_c_arr[]" id="saleprice_idd' + pid + '" value="' + saleprice + '"></td>' +
-                                '<td style = "text-align:left;vertical-align:middle; font-size:17px;"><center><name="remove" class="btnremove" data-id="'+pid+'"><span class="fas fa-trash" style="color:red;"></span></center></td>'+
-                            '<tr';
+                                '<td><input type="text" class="form-control qty" name="quantity_arr[]" id="qty_id' + pid + '" value="' + 1 + '" size="1"></td>' +
+                                '<td style = "text-align:left;vertical-align:middle; font-size:17px;"><span class="badge badge-danger totalamt" name="netamt_arr[]" id="saleprice_id' + pid + '">' + saleprice + '</span><input type="hidden" class="form-control saleprice" name="saleprice_arr[]" id="saleprice_idd' + pid + '" value="' + saleprice + '"></td>' +
+                                '<td style = "text-align:left;vertical-align:middle; font-size:17px;"><center><name="remove" class="btnremove" data-id="' + pid + '"><span class="fas fa-trash" style="color:red;"></span></center></td>' +
+                                '<tr';
                             $('.details').append(tr);
 
                         } //end function addrow
@@ -272,5 +272,25 @@ include_once "includes/footer.php";
                 }
             })
         })
+    });
+
+    $("#itemtable").delegate(".qty", "keyup change", function() {
+        // console.log("hello Qty");
+        var quantity = $(this);
+        var tr = $(this).parent().parent();
+
+        if ((quantity.val() - 0) > (tr.find(".stock_c").val() - 0)) {
+            Swal.fire("Kujdes!", "Sasia me e madhe se ne depo", "warning");
+            quantity.val(1);
+
+            tr.find(".totalamt").text(quantity.val() * tr.find(".price").text());
+            tr.find(".saleprice").val(quantity.val() * tr.find(".price").text());
+
+        } else {
+            tr.find(".totalamt").text(quantity.val() * tr.find(".price").text());
+            tr.find(".saleprice").val(quantity.val() * tr.find(".price").text());
+        }
+
+
     });
 </script>
