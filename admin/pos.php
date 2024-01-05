@@ -5,14 +5,15 @@ session_start();
 
 include_once "includes/header.php";
 
-function fill_product($pdo) {
+function fill_product($pdo)
+{
     $output = '';
-    $select=$pdo->prepare("select * from tbl_product order by product desc");
+    $select = $pdo->prepare("select * from tbl_product order by product desc");
     $select->execute();
 
     $result = $select->fetchAll();
-    foreach($result as $row) {
-        $output .= '<option value="'.$row["pid"].'">'.$row["product"].'</option>';
+    foreach ($result as $row) {
+        $output .= '<option value="' . $row["pid"] . '">' . $row["product"] . '</option>';
     }
     return $output;
 }
@@ -82,8 +83,8 @@ function fill_product($pdo) {
                                         <input type="text" class="form-control" placeholder="Skano Barkodin" id="txtbarcode_id">
                                     </div>
                                     <select class="form-control select2" data-dropdown-css-class="select2-purple" style="width: 100%;">
-                                        <option></option>
-                                        <?php echo fill_product($pdo);?>
+                                        <option>Percakto Produktin</option>
+                                        <?php echo fill_product($pdo); ?>
                                     </select>
 
                                     <hr />
@@ -231,7 +232,7 @@ include_once "includes/footer.php";
         theme: 'bootstrap4'
     })
 
-
+    //Kerkimi permes Scan Barcode
     var productarr = [];
     $(function() {
         $('#txtbarcode_id').on('change', function() {
@@ -280,7 +281,55 @@ include_once "includes/footer.php";
             })
         })
     });
+    //Kerkimi i Produktit permes Dropdown 
+    var productarr = [];
+    $(function() {
+        $('.select2').on('change', function() {
+            var productid = $(".select2").val();
+            
+            $.ajax({
+                url: "getproduct.php",
+                method: "get",
+                dataType: "json",
+                data: {
+                    id: productid
+                },
+                success: function(data) {
 
+
+                    if (jQuery.inArray(data["pid"], productarr) !== -1) {
+                        var actualqty = parseInt($('#qty_id' + data["pid"]).val()) + 1;
+                        $('#qty_id' + data["pid"]).val(actualqty);
+
+                        var saleprice = parseInt(actualqty) * data["salesprice"];
+                        // console.log(saleprice);
+                        $('#saleprice_id' + data["pid"]).html(saleprice);
+                        $('#saleprice_idd' + data["pid"]).val(saleprice);
+
+                        $("#txtbarcode_id").val("");
+
+                    } else {
+                        addrow(data["pid"], data["product"], data["salesprice"], data["stock"], data["barcode"]);
+                        productarr.push(data["pid"]);
+                        $("#txtbarcode_id").val();
+
+                        function addrow(pid, product, saleprice, stock, barcode) {
+                            var tr = '<tr>' +
+                                '<td style="text-align:left;vertical-align:middle; font-size:17px;"><class="form-control product_c" name="product_arr[]"<span class="badge badge-dark">' + product + '</span><input type="hidden" class="form-control pid" name="pid_arr[]" value="' + pid + '"> </td>' +
+                                '<td style = "text-align:left;vertical-align:middle; font-size:17px;"><span class="badge badge-primary stocklbl" name="stock_arr[]" id="stock_id' + pid + '">' + stock + '</span><input type="hidden" class="form-control stock_c" name="stock_c_arr[]" id="stock_idd' + pid + '" value="' + stock + '"></td>' +
+                                '<td style = "text-align:left;vertical-align:middle; font-size:17px;"><span class="badge badge-primary price" name="price_arr[]" id="price_id' + pid + '">' + saleprice + '</span><input type="hidden" class="form-control price_c" name="price_c_arr[]" id="price_idd' + pid + '" value="' + saleprice + '"></td>' +
+                                '<td><input type="text" class="form-control qty" name="quantity_arr[]" id="qty_id' + pid + '" value="' + 1 + '" size="1"></td>' +
+                                '<td style = "text-align:left;vertical-align:middle; font-size:17px;"><span class="badge badge-danger totalamt" name="netamt_arr[]" id="saleprice_id' + pid + '">' + saleprice + '</span><input type="hidden" class="form-control saleprice" name="saleprice_arr[]" id="saleprice_idd' + pid + '" value="' + saleprice + '"></td>' +
+                                '<td style = "text-align:left;vertical-align:middle; font-size:17px;"><center><name="remove" class="btnremove" data-id="' + pid + '"><span class="fas fa-trash" style="color:red;"></span></center></td>' +
+                                '<tr';
+                            $('.details').append(tr);
+
+                        } //end function addrow
+                    }
+                }
+            })
+        })
+    });
     $("#itemtable").delegate(".qty", "keyup change", function() {
         // console.log("hello Qty");
         var quantity = $(this);
