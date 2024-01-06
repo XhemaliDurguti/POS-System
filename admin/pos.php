@@ -17,6 +17,12 @@ function fill_product($pdo)
     }
     return $output;
 }
+
+
+$select = $pdo->prepare("select * from tbl_zbritja where zid = 1");
+$select->execute();
+$row = $select->fetch(PDO::FETCH_OBJ);
+
 ?>
 <style type="text/css">
     .tableFixedHead {
@@ -113,101 +119,101 @@ function fill_product($pdo)
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">Nentotali</span>
                                         </div>
-                                        <input type="text" class="form-control" readonly>
-                                        <div class="input-group-append">
-                                            <span class="input-group-text">&#8364;</span>
-                                        </div>
+                                        <input type="text" class="form-control" id="nentotali" readonly>
+                                        <div class=" input-group-append">
+                                        <span class="input-group-text">&#8364;</span>
                                     </div>
-
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">Zbritja</span>
-                                        </div>
-                                        <input type="text" class="form-control">
-                                        <div class="input-group-append">
-                                            <span class="input-group-text">%</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">Zbritja</span>
-                                        </div>
-                                        <input type="text" class="form-control" readonly>
-                                        <div class="input-group-append">
-                                            <span class="input-group-text">&#8364;</span>
-                                        </div>
-                                    </div>
-
-                                    <hr style="height:2px;border-width:0;color:black;background-color:black;">
-
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">TOTALI</span>
-                                        </div>
-                                        <input type="text" class="form-control form-control-lg total" readonly>
-                                        <div class="input-group-append">
-                                            <span class="input-group-text">&#8364;</span>
-                                        </div>
-                                    </div>
-
-                                    <hr style="height:2px;border-width:0;color:black;background-color:black;">
-
-                                    <div class="icheck-success d-inline">
-                                        <input type="radio" name="r3" checked id="radioSuccess1">
-                                        <label for="radioSuccess1">
-                                            Para
-                                        </label>
-                                    </div>
-                                    <div class="icheck-primary d-inline">
-                                        <input type="radio" name="r3" id="radioSuccess2">
-                                        <label for="radioSuccess2">
-                                            KARTEL
-                                        </label>
-                                    </div>
-                                    <div class="icheck-danger d-inline">
-                                        <input type="radio" name="r3" id="radioSuccess3">
-                                        <label for="radioSuccess3">
-                                            BORXH
-                                        </label>
-                                    </div>
-
-                                    <hr style="height:2px;border-width:0;color:black;background-color:black;">
-
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">Para kesh</span>
-                                        </div>
-                                        <input type="text" class="form-control">
-                                        <div class="input-group-append">
-                                            <span class="input-group-text">&#8364;</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">Kusuri</span>
-                                        </div>
-                                        <input type="text" class="form-control" readonly>
-                                        <div class="input-group-append">
-                                            <span class="input-group-text">&#8364;</span>
-                                        </div>
-                                    </div>
-
-                                    <hr style="height:2px;border-width:0;color:black;background-color:black;">
-
-                                    <input type="button" value="Save Order" class="btn btn-primary">
                                 </div>
+
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Zbritja</span>
+                                    </div>
+                                    <input type="text" class="form-control" value="<?php echo $row->zbritjaPerqind; ?>">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">%</span>
+                                    </div>
+                                </div>
+
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Zbritja</span>
+                                    </div>
+                                    <input type="text" class="form-control" value="<?php echo $row->zbritjaPare; ?>" readonly>
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">&#8364;</span>
+                                    </div>
+                                </div>
+
+                                <hr style="height:2px;border-width:0;color:black;background-color:black;">
+
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">TOTALI</span>
+                                    </div>
+                                    <input type="text" class="form-control form-control-lg total" readonly>
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">&#8364;</span>
+                                    </div>
+                                </div>
+
+                                <hr style="height:2px;border-width:0;color:black;background-color:black;">
+
+                                <div class="icheck-success d-inline">
+                                    <input type="radio" name="r3" checked id="radioSuccess1">
+                                    <label for="radioSuccess1">
+                                        Para
+                                    </label>
+                                </div>
+                                <div class="icheck-primary d-inline">
+                                    <input type="radio" name="r3" id="radioSuccess2">
+                                    <label for="radioSuccess2">
+                                        KARTEL
+                                    </label>
+                                </div>
+                                <div class="icheck-danger d-inline">
+                                    <input type="radio" name="r3" id="radioSuccess3">
+                                    <label for="radioSuccess3">
+                                        BORXH
+                                    </label>
+                                </div>
+
+                                <hr style="height:2px;border-width:0;color:black;background-color:black;">
+
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Para kesh</span>
+                                    </div>
+                                    <input type="text" class="form-control">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">&#8364;</span>
+                                    </div>
+                                </div>
+
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Kusuri</span>
+                                    </div>
+                                    <input type="text" class="form-control" readonly>
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">&#8364;</span>
+                                    </div>
+                                </div>
+
+                                <hr style="height:2px;border-width:0;color:black;background-color:black;">
+
+                                <input type="button" value="Save Order" class="btn btn-primary">
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- /.col-md-6 -->
             </div>
-            <!-- /.row -->
-        </div><!-- /.container-fluid -->
-    </div>
-    <!-- /.content -->
+            <!-- /.col-md-6 -->
+        </div>
+        <!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+<!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
 
@@ -258,7 +264,7 @@ include_once "includes/footer.php";
                         $('#saleprice_idd' + data["pid"]).val(saleprice);
 
                         $("#txtbarcode_id").val("");
-
+                        calculate();
                     } else {
                         addrow(data["pid"], data["product"], data["salesprice"], data["stock"], data["barcode"]);
                         productarr.push(data["pid"]);
@@ -286,7 +292,7 @@ include_once "includes/footer.php";
     $(function() {
         $('.select2').on('change', function() {
             var productid = $(".select2").val();
-            
+
             $.ajax({
                 url: "getproduct.php",
                 method: "get",
@@ -307,7 +313,7 @@ include_once "includes/footer.php";
                         $('#saleprice_idd' + data["pid"]).val(saleprice);
 
                         $("#txtbarcode_id").val("");
-
+                        calculate();
                     } else {
                         addrow(data["pid"], data["product"], data["salesprice"], data["stock"], data["barcode"]);
                         productarr.push(data["pid"]);
@@ -323,6 +329,7 @@ include_once "includes/footer.php";
                                 '<td style = "text-align:left;vertical-align:middle; font-size:17px;"><center><name="remove" class="btnremove" data-id="' + pid + '"><span class="fas fa-trash" style="color:red;"></span></center></td>' +
                                 '<tr';
                             $('.details').append(tr);
+                            calculate();
 
                         } //end function addrow
                     }
@@ -346,7 +353,21 @@ include_once "includes/footer.php";
             tr.find(".totalamt").text(quantity.val() * tr.find(".price").text());
             tr.find(".saleprice").val(quantity.val() * tr.find(".price").text());
         }
-
-
     });
+
+    function calculate() {
+        var nentotali = 0;
+        var zbritja = 0;
+        var zbritjaP = 0;
+        var totali = 0;
+        var paid_amt = 0;
+        var due = 0;
+
+
+        $(".saleprice").each(function() {
+            nentotali = nentotali + ($(this).val() * 1);
+        });
+
+        $("#nentotali").val(nentotali.toFixed(2));
+    }
 </script>
