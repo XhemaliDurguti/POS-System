@@ -121,99 +121,99 @@ $row = $select->fetch(PDO::FETCH_OBJ);
                                         </div>
                                         <input type="text" class="form-control" id="nentotali" readonly>
                                         <div class=" input-group-append">
-                                        <span class="input-group-text">&#8364;</span>
+                                            <span class="input-group-text">&#8364;</span>
+                                        </div>
                                     </div>
+
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Zbritja</span>
+                                        </div>
+                                        <input type="text" class="form-control" value="<?php echo $row->zbritjaPerqind; ?>">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">%</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Zbritja</span>
+                                        </div>
+                                        <input type="text" class="form-control" value="<?php echo $row->zbritjaPare; ?>" readonly>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">&#8364;</span>
+                                        </div>
+                                    </div>
+
+                                    <hr style="height:2px;border-width:0;color:black;background-color:black;">
+
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">TOTALI</span>
+                                        </div>
+                                        <input type="text" class="form-control form-control-lg total" readonly>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">&#8364;</span>
+                                        </div>
+                                    </div>
+
+                                    <hr style="height:2px;border-width:0;color:black;background-color:black;">
+
+                                    <div class="icheck-success d-inline">
+                                        <input type="radio" name="r3" checked id="radioSuccess1">
+                                        <label for="radioSuccess1">
+                                            Para
+                                        </label>
+                                    </div>
+                                    <div class="icheck-primary d-inline">
+                                        <input type="radio" name="r3" id="radioSuccess2">
+                                        <label for="radioSuccess2">
+                                            KARTEL
+                                        </label>
+                                    </div>
+                                    <div class="icheck-danger d-inline">
+                                        <input type="radio" name="r3" id="radioSuccess3">
+                                        <label for="radioSuccess3">
+                                            BORXH
+                                        </label>
+                                    </div>
+
+                                    <hr style="height:2px;border-width:0;color:black;background-color:black;">
+
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Para kesh</span>
+                                        </div>
+                                        <input type="text" class="form-control">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">&#8364;</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Kusuri</span>
+                                        </div>
+                                        <input type="text" class="form-control" readonly>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">&#8364;</span>
+                                        </div>
+                                    </div>
+
+                                    <hr style="height:2px;border-width:0;color:black;background-color:black;">
+
+                                    <input type="button" value="Save Order" class="btn btn-primary">
                                 </div>
-
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">Zbritja</span>
-                                    </div>
-                                    <input type="text" class="form-control" value="<?php echo $row->zbritjaPerqind; ?>">
-                                    <div class="input-group-append">
-                                        <span class="input-group-text">%</span>
-                                    </div>
-                                </div>
-
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">Zbritja</span>
-                                    </div>
-                                    <input type="text" class="form-control" value="<?php echo $row->zbritjaPare; ?>" readonly>
-                                    <div class="input-group-append">
-                                        <span class="input-group-text">&#8364;</span>
-                                    </div>
-                                </div>
-
-                                <hr style="height:2px;border-width:0;color:black;background-color:black;">
-
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">TOTALI</span>
-                                    </div>
-                                    <input type="text" class="form-control form-control-lg total" readonly>
-                                    <div class="input-group-append">
-                                        <span class="input-group-text">&#8364;</span>
-                                    </div>
-                                </div>
-
-                                <hr style="height:2px;border-width:0;color:black;background-color:black;">
-
-                                <div class="icheck-success d-inline">
-                                    <input type="radio" name="r3" checked id="radioSuccess1">
-                                    <label for="radioSuccess1">
-                                        Para
-                                    </label>
-                                </div>
-                                <div class="icheck-primary d-inline">
-                                    <input type="radio" name="r3" id="radioSuccess2">
-                                    <label for="radioSuccess2">
-                                        KARTEL
-                                    </label>
-                                </div>
-                                <div class="icheck-danger d-inline">
-                                    <input type="radio" name="r3" id="radioSuccess3">
-                                    <label for="radioSuccess3">
-                                        BORXH
-                                    </label>
-                                </div>
-
-                                <hr style="height:2px;border-width:0;color:black;background-color:black;">
-
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">Para kesh</span>
-                                    </div>
-                                    <input type="text" class="form-control">
-                                    <div class="input-group-append">
-                                        <span class="input-group-text">&#8364;</span>
-                                    </div>
-                                </div>
-
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">Kusuri</span>
-                                    </div>
-                                    <input type="text" class="form-control" readonly>
-                                    <div class="input-group-append">
-                                        <span class="input-group-text">&#8364;</span>
-                                    </div>
-                                </div>
-
-                                <hr style="height:2px;border-width:0;color:black;background-color:black;">
-
-                                <input type="button" value="Save Order" class="btn btn-primary">
                             </div>
                         </div>
                     </div>
                 </div>
+                <!-- /.col-md-6 -->
             </div>
-            <!-- /.col-md-6 -->
-        </div>
-        <!-- /.row -->
-    </div><!-- /.container-fluid -->
-</div>
-<!-- /.content -->
+            <!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
 
@@ -346,12 +346,17 @@ include_once "includes/footer.php";
             Swal.fire("Kujdes!", "Sasia me e madhe se ne depo", "warning");
             quantity.val(1);
 
-            tr.find(".totalamt").text(quantity.val() * tr.find(".price").text());
-            tr.find(".saleprice").val(quantity.val() * tr.find(".price").text());
-
+            var result = parseFloat(quantity.val() * tr.find(".price").text());
+            
+            
+            tr.find(".totalamt").text(result.toFixed(2));
+            tr.find(".saleprice").val(result);
+            calculate();
         } else {
-            tr.find(".totalamt").text(quantity.val() * tr.find(".price").text());
-            tr.find(".saleprice").val(quantity.val() * tr.find(".price").text());
+            var result = parseFloat(quantity.val() * tr.find(".price").text());
+            tr.find(".totalamt").text(result.toFixed(2));
+            tr.find(".saleprice").val(result);
+            calculate();
         }
     });
 
