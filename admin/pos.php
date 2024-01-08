@@ -193,7 +193,7 @@ $row = $select->fetch(PDO::FETCH_OBJ);
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">Kusuri</span>
                                         </div>
-                                        <input type="text" class="form-control" readonly>
+                                        <input type="text" class="form-control" id="txt_kusuri" readonly>
                                         <div class="input-group-append">
                                             <span class="input-group-text">&#8364;</span>
                                         </div>
@@ -364,7 +364,7 @@ include_once "includes/footer.php";
 
     function calculate(dis, paid) {
         var nentotali = 0;
-        var zbritja = 2;
+        var zbritja = 0;
         var zbritjaP = 0;
         var totali = 0;
         var paid_amt = 0;
@@ -391,19 +391,47 @@ include_once "includes/footer.php";
         calculate(discount, paid);
     });
 
-    $("#zbritja_p").on("keyup change", function() {
+    $("#zbritja_p").on("keyup change", function(event) {
+        if (event.keyCode == 13) {
 
-        var nentotali = parseFloat($("#nentotali").val());
-        var zbritja_p = parseFloat($("#zbritja_p").val());
-        var due = (zbritja_p / 100) * nentotali;
-        var pagesa = nentotali - due
-        // console.log(result);
-
-
-        var discont = nentotali - pagesa;
-        $("#zbritja_m").val(discont.toFixed(2));
-        $("#grandTotal").val(pagesa.toFixed(2));
+            var nentotali = parseFloat($("#nentotali").val());
+            var zbritja_p = parseFloat($("#zbritja_p").val());
+            var due = (zbritja_p / 100) * nentotali;
+            var pagesa = nentotali - due
+            // console.log(result);
+            var discont = nentotali - pagesa;
+            $("#zbritja_m").val(discont.toFixed(2));
+            $("#grandTotal").val(pagesa.toFixed(2));
+        } else {}
     });
+
+    $("#txtpaid").on("keyup change", function(event) {
+        if (event.keyCode == 13) {
+            var totali = parseFloat($("#grandTotal").val());
+            var pagesa = parseFloat($(this).val());
+
+            if (pagesa < totali) {
+                Swal.fire({
+                    title: 'Gabim!',
+                    text: 'Pagesa nuk mund te jete me e vogel se Totali!',
+                    icon: 'error',
+                    // timer: 2000,
+                    // buttons: false,
+                })
+                $("#txtpaid").val('');
+                $("#txt_kusuri").val('');
+            } else {
+                var result = pagesa - totali;
+
+                $("#txt_kusuri").val(result.toFixed(2));
+            }
+        }
+
+
+
+
+    });
+
 
     $(document).on('click', '.btnremove', function() {
         var removed = $(this).attr("data-id");
@@ -413,5 +441,7 @@ include_once "includes/footer.php";
         });
         $(this).closest('tr').remove();
         calculate(0, 0);
+        $("#txtpaid").val('');
+        $("#txt_kusuri").val('');
     });
 </script>
