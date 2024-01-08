@@ -124,12 +124,11 @@ $row = $select->fetch(PDO::FETCH_OBJ);
                                             <span class="input-group-text">&#8364;</span>
                                         </div>
                                     </div>
-
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">Zbritja</span>
                                         </div>
-                                        <input type="text" class="form-control" value="<?php echo $row->zbritjaPerqind; ?>">
+                                        <input type="text" class="form-control" id="zbritja_p">
                                         <div class="input-group-append">
                                             <span class="input-group-text">%</span>
                                         </div>
@@ -139,7 +138,7 @@ $row = $select->fetch(PDO::FETCH_OBJ);
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">Zbritja</span>
                                         </div>
-                                        <input type="text" class="form-control" value="<?php echo $row->zbritjaPare; ?>" readonly>
+                                        <input type="text" class="form-control" id="zbritja_m" readonly>
                                         <div class="input-group-append">
                                             <span class="input-group-text">&#8364;</span>
                                         </div>
@@ -151,7 +150,7 @@ $row = $select->fetch(PDO::FETCH_OBJ);
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">TOTALI</span>
                                         </div>
-                                        <input type="text" class="form-control form-control-lg total" readonly>
+                                        <input type="text" class="form-control form-control-lg total" readonly id="grandTotal">
                                         <div class="input-group-append">
                                             <span class="input-group-text">&#8364;</span>
                                         </div>
@@ -184,7 +183,7 @@ $row = $select->fetch(PDO::FETCH_OBJ);
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">Para kesh</span>
                                         </div>
-                                        <input type="text" class="form-control">
+                                        <input type="text" class="form-control" id="txtpaid">
                                         <div class="input-group-append">
                                             <span class="input-group-text">&#8364;</span>
                                         </div>
@@ -264,7 +263,7 @@ include_once "includes/footer.php";
                         $('#saleprice_idd' + data["pid"]).val(saleprice);
 
                         $("#txtbarcode_id").val("");
-                        calculate();
+                        calculate(0, 0);
                     } else {
                         addrow(data["pid"], data["product"], data["salesprice"], data["stock"], data["barcode"]);
                         productarr.push(data["pid"]);
@@ -280,7 +279,7 @@ include_once "includes/footer.php";
                                 '<td style = "text-align:left;vertical-align:middle; font-size:17px;"><center><name="remove" class="btnremove" data-id="' + pid + '"><span class="fas fa-trash" style="color:red;"></span></center></td>' +
                                 '<tr';
                             $('.details').append(tr);
-
+                            calculate(0, 0)
                         } //end function addrow
                     }
                 }
@@ -313,7 +312,7 @@ include_once "includes/footer.php";
                         $('#saleprice_idd' + data["pid"]).val(saleprice);
 
                         $("#txtbarcode_id").val("");
-                        calculate();
+                        calculate(0, 0);
                     } else {
                         addrow(data["pid"], data["product"], data["salesprice"], data["stock"], data["barcode"]);
                         productarr.push(data["pid"]);
@@ -329,7 +328,7 @@ include_once "includes/footer.php";
                                 '<td style = "text-align:left;vertical-align:middle; font-size:17px;"><center><name="remove" class="btnremove" data-id="' + pid + '"><span class="fas fa-trash" style="color:red;"></span></center></td>' +
                                 '<tr';
                             $('.details').append(tr);
-                            calculate();
+                            calculate(0, 0);
 
                         } //end function addrow
                     }
@@ -347,22 +346,22 @@ include_once "includes/footer.php";
             quantity.val(1);
 
             var result = parseFloat(quantity.val() * tr.find(".price").text());
-            
-            
+
+            // calculate();
             tr.find(".totalamt").text(result.toFixed(2));
             tr.find(".saleprice").val(result);
-            calculate();
+            calculate(0, 0);
         } else {
             var result = parseFloat(quantity.val() * tr.find(".price").text());
             tr.find(".totalamt").text(result.toFixed(2));
             tr.find(".saleprice").val(result);
-            calculate();
+            calculate(0, 0);
         }
     });
 
-    function calculate() {
+    function calculate(dis, paid) {
         var nentotali = 0;
-        var zbritja = 0;
+        var zbritja = 2;
         var zbritjaP = 0;
         var totali = 0;
         var paid_amt = 0;
@@ -373,6 +372,33 @@ include_once "includes/footer.php";
             nentotali = nentotali + ($(this).val() * 1);
         });
 
+
         $("#nentotali").val(nentotali.toFixed(2));
+        $("#zbritja_p").val(zbritja.toFixed(2));
+        zbritja = (zbritjaP / 100) * nentotali;
+        totali = nentotali - zbritja;
+        $("#zbritja_m").val(due.toFixed(2));
+        $("#grandTotal").val(nentotali - zbritjaP);
+
+
     }
+    $("#txt_paid").keyup(function() {
+        var paid = $(this).val();
+        var discount = $("#zbritja_m").val();
+        calculate(discount, paid);
+    });
+
+    $("#zbritja_p").on("keyup change", function() {
+
+        var nentotali = parseFloat($("#nentotali").val());
+        var zbritja_p = parseFloat($("#zbritja_p").val());
+        var due = (zbritja_p / 100) * nentotali;
+        var pagesa = nentotali - due
+        // console.log(result);
+
+
+        var discont = nentotali - pagesa;
+        $("#zbritja_m").val(discont.toFixed(2));
+        $("#grandTotal").val(pagesa.toFixed(2));
+    });
 </script>
