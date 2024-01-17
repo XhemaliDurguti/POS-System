@@ -3,7 +3,7 @@ include_once '../include/db.php';
 session_start();
 
 
-include_once "includes/header.php";
+include_once "../admin/includes/header.php";
 
 function fill_product($pdo)
 {
@@ -17,72 +17,6 @@ function fill_product($pdo)
     }
     return $output;
 }
-
-if (isset($_POST['btnSave'])) {
-    $orderdate = date('Y-m-d');
-    $subtotal = $_POST['nentotali'];
-    $totali = $_POST['grandTotal'];
-    $zbritjap = $_POST['zbritja_p'];
-    $zbritja = $_POST['zbritja_m'];
-    $mpages = $_POST['rb'];
-    $kesh = $_POST['txtpaid'];
-    $kusuri = $_POST['txt_kusuri'];
-
-
-    $pid_arr = $_POST['pid_arr'];
-    $barcode_arr = $_POST['barcode_arr'];
-    $name_arr = $_POST['product_arr'];
-    $stock_arr = $_POST['stock_c_arr'];
-    $quantity_arr = $_POST['quantity_arr'];
-    $price_arr = $_POST['price_c_arr'];
-    $subtotal_arr = $_POST['saleprice_arr'];
-    // print_r($_POST); 
-
-    $insert = $pdo->prepare("insert into tbl_invoice(order_date,subtotal,totali,zbritjaPerqindje,zbritja,mPageses,kesh,kusuri)values(:odate,:subtotal,:total,:zp,:zm,:mpages,:kesh,:kusuri)");
-    $insert->bindParam(':odate', $orderdate);
-    $insert->bindParam(':subtotal', $subtotal);
-    $insert->bindParam(':total', $totali);
-    $insert->bindParam(':zp', $zbritjap);
-    $insert->bindParam(':zm', $zbritja);
-    $insert->bindParam(':mpages', $mpages);
-    $insert->bindParam(':kesh', $kesh);
-    $insert->bindParam(':kusuri', $kusuri);
-
-    $insert->execute();
-
-    $invoice_id = $pdo->lastInsertId();
-
-    if ($invoice_id != null) {
-        for ($i = 0; $i < count($pid_arr); $i++) {
-            $rem_qty = $stock_arr[$i] - $quantity_arr[$i];
-
-            if ($rem_qty < 0) {
-                return "Blera nuk perfundoj!";
-            } else {
-                $update = $pdo->prepare("update tbl_product set stock = '$rem_qty' where pid = '" . $pid_arr[$i] . "'");
-                $update->execute();
-            }
-
-            $insert = $pdo->prepare("insert into tbl_invoice_details(invoice_id,barcode,product_id,product_name,qty,cmimiShitjes,subtotal,order_date)values(:invid,:barkode,:pid,:pname,:qty,:cShitjes,:stotal,:odate)");
-            $insert->bindParam(':invid', $invoice_id);
-            $insert->bindParam(':barkode', $barcode_arr[$i]);
-            $insert->bindParam(':pid', $price_arr[$i]);
-            $insert->bindParam(':pname', $name_arr[$i]);
-            $insert->bindParam(':qty', $quantity_arr[$i]);
-            $insert->bindParam(':cShitjes', $price_arr[$i]);
-            $insert->bindParam(':stotal', $subtotal_arr[$i]);
-            $insert->bindParam(':odate', $orderdate);
-
-            if (!$insert->execute()) {
-                print_r($insert->errorInfo());
-            } else {
-                $_SESSION['status'] = "Blerja Perfundoj me Sukses!!";
-                $_SESSION['status_code'] = "success";
-            }
-        }
-    }
-}
-
 ?>
 <style type="text/css">
     .tableFixedHead {
@@ -149,7 +83,7 @@ if (isset($_POST['btnSave'])) {
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"><i class="fa fa-barcode"></i></span>
                                             </div>
-                                            <input type="text" class="form-control" placeholder="Skano Barkodin" id="txtbarcode_id">
+                                            <input type="text" class="form-control barkodi" placeholder="Skano Barkodin" id="txtbarcode_id">
                                         </div>
                                         <select class="form-control select2" data-dropdown-css-class="select2-purple" style="width: 100%;">
                                             <option>Percakto Produktin</option>
@@ -293,7 +227,7 @@ if (isset($_POST['btnSave'])) {
 </aside>
 <!-- /.control-sidebar -->
 <?php
-include_once "includes/footer.php";
+include_once "../admin/includes/footer.php";
 ?>
 <script>
     //Initialize Select2 Elements
@@ -312,7 +246,7 @@ include_once "includes/footer.php";
         if (key == 13) {
             var barcode = $("#txtbarcode_id").val();
             $.ajax({
-                url: "getproduct.php",
+                url: "../admin/getproduct.php",
                 method: "get",
                 dataType: "json",
                 data: {
@@ -329,7 +263,7 @@ include_once "includes/footer.php";
                         $('#saleprice_idd' + data["pid"]).val(saleprice);
 
                         $("#txtbarcode_id").val("");
-                        calculate(0, 0);
+                        //calculate(0, 0);
                     } else {
                         addrow(data["pid"], data["product"], data["salesprice"], data["stock"], data["barcode"]);
                         productarr.push(data["pid"]);
@@ -348,7 +282,7 @@ include_once "includes/footer.php";
                                 '<td><center><button type="button" name="remove" class="btn btn-danger btn-sm btnremove" data-id="' + pid + '"><span class="fas fa-trash"></span></button></center></td>'
                             '<tr';
                             $('.details').append(tr);
-                            calculate(0, 0);
+                            // calculate(0, 0);
                             $('#txtbarcode_id').val("");
                         } //end function addrow
                     };
@@ -369,7 +303,7 @@ include_once "includes/footer.php";
             var productid = $(".select2").val();
 
             $.ajax({
-                url: "getproduct.php",
+                url: "../admin/getproduct.php",
                 method: "get",
                 dataType: "json",
                 data: {
@@ -384,7 +318,7 @@ include_once "includes/footer.php";
 
                         var saleprice = parseInt(actualqty) * data["salesprice"];
                         // console.log(saleprice);
-                        $('#saleprice_id' + data["pid"]).html(saleprice.toFixed(2));
+                        $('#saleprice_id' + data["pid"]).html(saleprice);
                         $('#saleprice_idd' + data["pid"]).val(saleprice);
 
                         $("#txtbarcode_id").val("");

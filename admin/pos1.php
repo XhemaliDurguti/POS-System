@@ -306,11 +306,10 @@ include_once "includes/footer.php";
 
     //Kerkimi permes Scan Barcode
     var productarr = [];
-    $('#txtbarcode_id').keypress(function(e) {
-        var key = e.keyCode || e.which;
-
-        if (key == 13) {
+    $(function() {
+        $('#txtbarcode_id').on('change', function() {
             var barcode = $("#txtbarcode_id").val();
+
             $.ajax({
                 url: "getproduct.php",
                 method: "get",
@@ -319,13 +318,15 @@ include_once "includes/footer.php";
                     id: barcode
                 },
                 success: function(data) {
+
+
                     if (jQuery.inArray(data["pid"], productarr) !== -1) {
                         var actualqty = parseInt($('#qty_id' + data["pid"]).val()) + 1;
                         $('#qty_id' + data["pid"]).val(actualqty);
 
                         var saleprice = parseInt(actualqty) * data["salesprice"];
-                        // console.log(saleprice.toFixed(2));
-                        $('#saleprice_id' + data["pid"]).html(saleprice.toFixed(2));
+                        // console.log(saleprice);
+                        $('#saleprice_id' + data["pid"]).html(saleprice);
                         $('#saleprice_idd' + data["pid"]).val(saleprice);
 
                         $("#txtbarcode_id").val("");
@@ -348,20 +349,13 @@ include_once "includes/footer.php";
                                 '<td><center><button type="button" name="remove" class="btn btn-danger btn-sm btnremove" data-id="' + pid + '"><span class="fas fa-trash"></span></button></center></td>'
                             '<tr';
                             $('.details').append(tr);
-                            calculate(0, 0);
-                            $('#txtbarcode_id').val("");
+                            calculate(0, 0)
                         } //end function addrow
-                    };
-                },
-                error: function() {
-                    alert("Gabim barcodi");
+                    }
                 }
-            });
-            e.preventDefault();
-            return false;
-        }
+            })
+        })
     });
-
     //Kerkimi i Produktit permes Dropdown 
     var productarr = [];
     $(function() {
@@ -384,7 +378,7 @@ include_once "includes/footer.php";
 
                         var saleprice = parseInt(actualqty) * data["salesprice"];
                         // console.log(saleprice);
-                        $('#saleprice_id' + data["pid"]).html(saleprice.toFixed(2));
+                        $('#saleprice_id' + data["pid"]).html(saleprice);
                         $('#saleprice_idd' + data["pid"]).val(saleprice);
 
                         $("#txtbarcode_id").val("");
