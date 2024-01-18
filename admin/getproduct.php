@@ -4,7 +4,7 @@
     $productid = $_GET["id"];
     $barcode = $_GET["id"];
 
-    $select = $pdo->prepare("select * from tbl_product where  pid = $productid OR barcode =$barcode");
+    $select = $pdo->prepare("select * from tbl_product where  pid = $productid OR barcode =$barcode and stock > 0");
     $select->execute();
 
     $row = $select->fetch(PDO::FETCH_ASSOC);
