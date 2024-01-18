@@ -254,18 +254,27 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         </li>
                         <li class="nav-item">
                             <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-list"></i>
+                                <i class="nav-icon fas fa-chart-pie"></i>
                                 <p>
-                                    Lista Porosive
+                                    Raportet e Shitjes
+                                    <i class="fas fa-angle-left right"></i>
                                 </p>
                             </a>
+                            <ul class="nav nav-treeview">
+                                
+                                <li class="nav-item">
+                                    <a href="../../starter.html" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Starter Page</p>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                         <li class="nav-item">
                             <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-chart-pie"></i>
+                                <i class="nav-icon fas fa-list"></i>
                                 <p>
-                                    Raporti Shitjes
-
+                                    Lista Porosive
                                 </p>
                             </a>
                         </li>

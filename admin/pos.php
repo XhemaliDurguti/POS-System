@@ -327,6 +327,8 @@ include_once "includes/footer.php";
                     if (data && data.barcode !== undefined) {
                         if (jQuery.inArray(data["pid"], productarr) !== -1) {
                             var actualqty = parseInt($('#qty_id' + data["pid"]).val()) + 1;
+                            // var stock = data["stock"];
+                            
                             $('#qty_id' + data["pid"]).val(actualqty);
 
                             var saleprice = parseInt(actualqty) * data["salesprice"];
@@ -361,13 +363,13 @@ include_once "includes/footer.php";
                     } else {
                         Swal.fire({
                             title: 'Gabim!',
-                            text: 'Nuk ka Produkt te regjistruar me kete Barkod!',
+                            text: 'Sasia ne depo eshte Zero, Perndryshe Produkti nuk eshte i regjistruar!',
                             icon: 'error',
                             // timer: 2000,
                             // buttons: false,
                         })
                         $('#txtbarcode_id').val("");
-                        // $('#txtbarcode_id').focus();
+                        // $('#txtbarcode_id').focus(); 
                     }
 
                 },
@@ -433,6 +435,8 @@ include_once "includes/footer.php";
             })
         })
     });
+
+    //Kalkulimi mbasi e vendos sasin e produktit ne tabel
     $("#itemtable").delegate(".qty", "keyup change", function() {
         // console.log("hello Qty");
         var quantity = $(this);
@@ -455,7 +459,7 @@ include_once "includes/footer.php";
             calculate(0, 0);
         }
     });
-
+    //Kalkulimi i totalit
     function calculate(dis, paid) {
         var nentotali = 0;
         var zbritja = 0;
@@ -484,10 +488,9 @@ include_once "includes/footer.php";
         var discount = $("#zbritja_m").val();
         calculate(discount, paid);
     });
-
+    //Kalkulimi i zbritjes nga totali si dhe shfaqja e totalit per pages -zbritja
     $("#zbritja_p").on("keyup change", function() {
         // if (event.keyCode == 13) {
-
         var nentotali = parseFloat($("#nentotali").val());
         var zbritja_p = parseFloat($("#zbritja_p").val());
         var due = (zbritja_p / 100) * nentotali;
@@ -498,7 +501,7 @@ include_once "includes/footer.php";
         $("#grandTotal").val(pagesa.toFixed(2));
         // } else {}
     });
-
+    //Kalukilimi i totalit me pagesen kesh te cilen e bane klienti
     $("#txtpaid").on("keyup change", function() {
         // if (event.keyCode == 13) {
         var totali = parseFloat($("#grandTotal").val());
@@ -520,13 +523,9 @@ include_once "includes/footer.php";
             $("#txt_kusuri").val(result.toFixed(2));
         }
         // }
-
-
-
-
     });
 
-
+    //Buttoni per fshirjen e produkteve ne tabel mbas skenimit 
     $(document).on('click', '.btnremove', function() {
         var removed = $(this).attr("data-id");
         productarr = jQuery.grep(productarr, function(value) {
