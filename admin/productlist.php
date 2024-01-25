@@ -144,12 +144,13 @@ include_once "includes/footer.php";
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
                 cancelButtonColor: "#d33",
-                confirmButtonText: "PO Fshije"
+                confirmButtonText: "Po",
+                cancelButtonText: "Jo",
             }).then((result) => {
                 if (result.isConfirmed) {
 
                     $.ajax({
-                        url: 'productdelete.php',
+                        url: 'deleteinvoice.php',
                         type: 'post',
                         data: {
                             pidd: id
@@ -160,7 +161,7 @@ include_once "includes/footer.php";
                     });
                     Swal.fire({
                         title: "Deleted!",
-                        text: "Your file has been deleted.",
+                        text: "Produkti Juaj eshte Fshire me sukses!.",
                         icon: "success"
                     });
                 }

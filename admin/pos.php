@@ -50,29 +50,31 @@ if (isset($_POST['btnSave'])) {
 
     $insert->execute();
 
+
     $invoice_id = $pdo->lastInsertId();
-
-    if ($invoice_id != null) {
-        for ($i = 0; $i < count($pid_arr); $i++) {
+    if($invoice_id != null) {
+        print_r($invoice_id);
+        for($i = 0;$i < count($pid_arr);$i++) 
+        {
             $rem_qty = $stock_arr[$i] - $quantity_arr[$i];
-
-            if ($rem_qty < 0) {
-                return "Blera nuk perfundoj!";
-            } else {
-                $update = $pdo->prepare("update tbl_product set stock = '$rem_qty' where pid = '" . $pid_arr[$i] . "'");
+            
+            if($rem_qty < 0){
+                return "Blerja nuk perfundoj";
+            }else {
+                $update =$pdo->prepare("update tbl_product set stock = '$rem_qty' where pid = '".$pid_arr[$i]."'");
                 $update->execute();
             }
 
-            $insert = $pdo->prepare("insert into tbl_invoice_details(invoice_id,barcode,product_id,product_name,qty,cmimiShitjes,subtotal,order_date)values(:invid,:barkode,:pid,:pname,:qty,:cShitjes,:stotal,:odate)");
-            $insert->bindParam(':invid', $invoice_id);
-            $insert->bindParam(':barkode', $barcode_arr[$i]);
-            $insert->bindParam(':pid', $price_arr[$i]);
-            $insert->bindParam(':pname', $name_arr[$i]);
-            $insert->bindParam(':qty', $quantity_arr[$i]);
+            $insert = $pdo->prepare("insert into tbl_invoice_details(invoice_id,product_id,barcode,product_name,qty,cmimiShitjes,subtotal,order_date)VALUES(:invid,:pid,:barkodi,:product,:qty,:cShitjes,:subtotal,:odate)");
+            $insert->bindParam(':invid',$invoice_id);
+            $insert->bindParam(':pid', $pid_arr[$i]);
+            $insert->bindParam(':barkodi', $barcode_arr[$i]);
+            $insert->bindParam(':product',$name_arr[$i]);
+            $insert->bindParam(':qty',$quantity_arr[$i]);
             $insert->bindParam(':cShitjes', $price_arr[$i]);
-            $insert->bindParam(':stotal', $subtotal_arr[$i]);
+            $insert->bindParam(':subtotal', $subtotal_arr[$i]);
             $insert->bindParam(':odate', $orderdate);
-
+            
             if (!$insert->execute()) {
                 print_r($insert->errorInfo());
             } else {
@@ -81,6 +83,37 @@ if (isset($_POST['btnSave'])) {
             }
         }
     }
+    // $invoice_id = $pdo->lastInsertId();
+
+    // if ($invoice_id != null) {
+    //     for ($i = 0; $i < count($pid_arr); $i++) {
+    //         $rem_qty = $stock_arr[$i] - $quantity_arr[$i];
+
+    //         if ($rem_qty < 0) {
+    //             return "Blera nuk perfundoj!";
+    //         } else {
+    //             $update = $pdo->prepare("update tbl_product set stock = '$rem_qty' where pid = '" . $pid_arr[$i] . "'");
+    //             $update->execute();
+    //         }
+
+    //         $insert = $pdo->prepare("insert into tbl_invoice_details(invoice_id,barcode,product_id,product_name,qty,cmimiShitjes,subtotal,order_date)values(:invid,:barkode,:pid,:pname,:qty,:cShitjes,:stotal,:odate)");
+    //         $insert->bindParam(':invid', $invoice_id);
+    //         $insert->bindParam(':barkode', $barcode_arr[$i]);
+    //         $insert->bindParam(':pid', $price_arr[$i]);
+    //         $insert->bindParam(':pname', $name_arr[$i]);
+    //         $insert->bindParam(':qty', $quantity_arr[$i]);
+    //         $insert->bindParam(':cShitjes', $price_arr[$i]);
+    //         $insert->bindParam(':stotal', $subtotal_arr[$i]);
+    //         $insert->bindParam(':odate', $orderdate);
+
+    //         if (!$insert->execute()) {
+    //             print_r($insert->errorInfo());
+    //         } else {
+    //             $_SESSION['status'] = "Blerja Perfundoj me Sukses!!";
+    //             $_SESSION['status_code'] = "success";
+    //         }
+    //     }
+    // }
 }
 
 ?>
@@ -222,19 +255,19 @@ if (isset($_POST['btnSave'])) {
                                         <hr style="height:2px;border-width:0;color:black;background-color:black;">
 
                                         <div class="icheck-success d-inline">
-                                            <input type="radio" name="rb" value="para" checked id="radioSuccess1">
+                                            <input type="radio" name="rb" value="Para" checked id="radioSuccess1">
                                             <label for="radioSuccess1">
                                                 Para
                                             </label>
                                         </div>
                                         <div class="icheck-primary d-inline">
-                                            <input type="radio" name="rb" value="kartel" id="radioSuccess2">
+                                            <input type="radio" name="rb" value="Kartel" id="radioSuccess2">
                                             <label for="radioSuccess2">
                                                 KARTEL
                                             </label>
                                         </div>
                                         <div class="icheck-danger d-inline">
-                                            <input type="radio" name="rb" value="borxh" id="radioSuccess3">
+                                            <input type="radio" name="rb" value="Borxh" id="radioSuccess3">
                                             <label for="radioSuccess3">
                                                 BORXH
                                             </label>

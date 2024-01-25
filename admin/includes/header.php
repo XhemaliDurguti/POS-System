@@ -261,11 +261,22 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
-                                
                                 <li class="nav-item">
-                                    <a href="../../starter.html" class="nav-link">
+                                    <a href="orderlist.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Starter Page</p>
+                                        <p>Raporti i Shitjes Sod</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="orderlist.php" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Raporti i Shitjes Sod</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="orderlist.php" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Raporti i Shitjes Sod</p>
                                     </a>
                                 </li>
                             </ul>

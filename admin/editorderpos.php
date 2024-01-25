@@ -18,71 +18,31 @@ function fill_product($pdo)
     return $output;
 }
 
-if (isset($_POST['btnSave'])) {
-    $orderdate = date('Y-m-d');
-    $subtotal = $_POST['nentotali'];
-    $totali = $_POST['grandTotal'];
-    $zbritjap = $_POST['zbritja_p'];
-    $zbritja = $_POST['zbritja_m'];
-    $mpages = $_POST['rb'];
-    $kesh = $_POST['txtpaid'];
-    $kusuri = $_POST['txt_kusuri'];
+$id = $_GET['id'];
+
+$select = $pdo->prepare("select * from tbl_invoice where invoice_id=$id");
+$select->execute();
+$row = $select->fetch(PDO::FETCH_ASSOC);
+//var_dump($row);
+$order_date = date('Y-m-d', strtotime($row['order_date']));
+
+$db_subtotal = $row['subtotal'];
+$db_totali = $row['totali'];
+$db_zbritjap = $row['zbritjaPerqindje'];
+$db_zbritja = $row['zbritja'];
+$db_mpages = $row['mPageses'];
+$db_kesh = $row['kesh'];
+$db_kusuri = $row['kusuri'];
 
 
-    $pid_arr = $_POST['pid_arr'];
-    $barcode_arr = $_POST['barcode_arr'];
-    $name_arr = $_POST['product_arr'];
-    $stock_arr = $_POST['stock_c_arr'];
-    $quantity_arr = $_POST['quantity_arr'];
-    $price_arr = $_POST['price_c_arr'];
-    $subtotal_arr = $_POST['saleprice_arr'];
-    // print_r($_POST); 
+$select = $pdo->prepare("select * from tbl_invoice_details where invoice_id = $id");
+$select->execute();
+$row_invoice_details = $select->fetchAll(PDO::FETCH_ASSOC);
 
-    $insert = $pdo->prepare("insert into tbl_invoice(order_date,subtotal,totali,zbritjaPerqindje,zbritja,mPageses,kesh,kusuri)values(:odate,:subtotal,:total,:zp,:zm,:mpages,:kesh,:kusuri)");
-    $insert->bindParam(':odate', $orderdate);
-    $insert->bindParam(':subtotal', $subtotal);
-    $insert->bindParam(':total', $totali);
-    $insert->bindParam(':zp', $zbritjap);
-    $insert->bindParam(':zm', $zbritja);
-    $insert->bindParam(':mpages', $mpages);
-    $insert->bindParam(':kesh', $kesh);
-    $insert->bindParam(':kusuri', $kusuri);
 
-    $insert->execute();
-
-    $invoice_id = $pdo->lastInsertId();
-
-    if ($invoice_id != null) {
-        for ($i = 0; $i < count($pid_arr); $i++) {
-            $rem_qty = $stock_arr[$i] - $quantity_arr[$i];
-
-            if ($rem_qty < 0) {
-                return "Blera nuk perfundoj!";
-            } else {
-                $update = $pdo->prepare("update tbl_product set stock = '$rem_qty' where pid = '" . $pid_arr[$i] . "'");
-                $update->execute();
-            }
-
-            $insert = $pdo->prepare("insert into tbl_invoice_details(invoice_id,barcode,product_id,product_name,qty,cmimiShitjes,subtotal,order_date)values(:invid,:barkode,:pid,:pname,:qty,:cShitjes,:stotal,:odate)");
-            $insert->bindParam(':invid', $invoice_id);
-            $insert->bindParam(':barkode', $barcode_arr[$i]);
-            $insert->bindParam(':pid', $price_arr[$i]);
-            $insert->bindParam(':pname', $name_arr[$i]);
-            $insert->bindParam(':qty', $quantity_arr[$i]);
-            $insert->bindParam(':cShitjes', $price_arr[$i]);
-            $insert->bindParam(':stotal', $subtotal_arr[$i]);
-            $insert->bindParam(':odate', $orderdate);
-
-            if (!$insert->execute()) {
-                print_r($insert->errorInfo());
-            } else {
-                $_SESSION['status'] = "Blerja Perfundoj me Sukses!!";
-                $_SESSION['status_code'] = "success";
-            }
-        }
-    }
+if (isset($_POST['btnupdateOrder'])) {
+    echo 'Faktura u Ndryshua';
 }
-
 ?>
 <style type="text/css">
     .tableFixedHead {
@@ -136,9 +96,9 @@ if (isset($_POST['btnSave'])) {
             <div class="row">
                 <div class="col-lg-12">
                     <form action="" method="post">
-                        <div class="card card-primary card-outline">
+                        <div class="card card-danger card-outline">
                             <div class="card-header">
-                                <h5 class="m-0">POS Sistemi i Shitjes</h5>
+                                <h5 class="m-0">Ndryshimi i Faktures</h5>
                             </div>
                             <div class="card-body">
 
@@ -182,7 +142,7 @@ if (isset($_POST['btnSave'])) {
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text">Nentotali</span>
                                             </div>
-                                            <input type="text" class="form-control" name="nentotali" id="nentotali" readonly>
+                                            <input type="text" class="form-control" name="nentotali" id="nentotali" value="<?php echo $db_subtotal; ?>" readonly>
                                             <div class=" input-group-append">
                                                 <span class="input-group-text">&#8364;</span>
                                             </div>
@@ -191,7 +151,7 @@ if (isset($_POST['btnSave'])) {
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text">Zbritja</span>
                                             </div>
-                                            <input type="text" class="form-control" name="zbritja_p" id="zbritja_p">
+                                            <input type="text" class="form-control" name="zbritja_p" id="zbritja_p" value="<?php echo $db_zbritjap; ?>">
                                             <div class="input-group-append">
                                                 <span class="input-group-text">%</span>
                                             </div>
@@ -201,7 +161,7 @@ if (isset($_POST['btnSave'])) {
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text">Zbritja</span>
                                             </div>
-                                            <input type="text" class="form-control" name="zbritja_m" id="zbritja_m" readonly>
+                                            <input type="text" class="form-control" name="zbritja_m" id="zbritja_m" value="<?php echo $db_zbritja; ?>" readonly>
                                             <div class="input-group-append">
                                                 <span class="input-group-text">&#8364;</span>
                                             </div>
@@ -213,7 +173,7 @@ if (isset($_POST['btnSave'])) {
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text">TOTALI</span>
                                             </div>
-                                            <input type="text" class="form-control form-control-lg total" name="grandTotal" readonly id="grandTotal">
+                                            <input type="text" class="form-control form-control-lg total" name="grandTotal" id="grandTotal" value="<?php echo $db_totali; ?>" readonly>
                                             <div class="input-group-append">
                                                 <span class="input-group-text">&#8364;</span>
                                             </div>
@@ -222,19 +182,19 @@ if (isset($_POST['btnSave'])) {
                                         <hr style="height:2px;border-width:0;color:black;background-color:black;">
 
                                         <div class="icheck-success d-inline">
-                                            <input type="radio" name="rb" value="para" checked id="radioSuccess1">
+                                            <input type="radio" name="rb" value="Para" id="radioSuccess1" value="Para" <?php echo ($db_mpages == 'Para') ? 'checked' : '' ?>>
                                             <label for="radioSuccess1">
                                                 Para
                                             </label>
                                         </div>
                                         <div class="icheck-primary d-inline">
-                                            <input type="radio" name="rb" value="kartel" id="radioSuccess2">
+                                            <input type="radio" name="rb" id="radioSuccess2" value="Kartel" <?php echo ($db_mpages == 'Kartel') ? 'checked' : '' ?>>
                                             <label for="radioSuccess2">
                                                 KARTEL
                                             </label>
                                         </div>
                                         <div class="icheck-danger d-inline">
-                                            <input type="radio" name="rb" value="borxh" id="radioSuccess3">
+                                            <input type="radio" name="rb" id="radioSuccess3" value="Borxh" <?php echo ($db_mpages == 'Borxh') ? 'checked' : '' ?>>
                                             <label for="radioSuccess3">
                                                 BORXH
                                             </label>
@@ -246,7 +206,7 @@ if (isset($_POST['btnSave'])) {
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text">Para kesh</span>
                                             </div>
-                                            <input type="text" class="form-control" name="txtpaid" id="txtpaid">
+                                            <input type="text" class="form-control" name="txtpaid" id="txtpaid" value="<?php echo $db_kesh; ?>">
                                             <div class="input-group-append">
                                                 <span class="input-group-text">&#8364;</span>
                                             </div>
@@ -256,7 +216,7 @@ if (isset($_POST['btnSave'])) {
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text">Kusuri</span>
                                             </div>
-                                            <input type="text" class="form-control" name="txt_kusuri" id="txt_kusuri" readonly>
+                                            <input type="text" class="form-control" name="txt_kusuri" id="txt_kusuri" value="<?php echo $db_kusuri; ?>" readonly>
                                             <div class="input-group-append">
                                                 <span class="input-group-text">&#8364;</span>
                                             </div>
@@ -265,7 +225,7 @@ if (isset($_POST['btnSave'])) {
                                         <hr style="height:2px;border-width:0;color:black;background-color:black;">
 
                                         <div class="text-center">
-                                            <button type="submit" class="btn btn-success" name="btnSave">Perfundo Blerjen</button>
+                                            <button type="submit" class="btn btn-info" name="btnupdateOrder">Ndrysho Fakturen</button>
                                         </div>
                                         <!-- <input type="button" value="Save Order" class="btn btn-primary" name="btnSave"> -->
                                     </div>
@@ -304,12 +264,82 @@ include_once "includes/footer.php";
         theme: 'bootstrap4'
     })
 
+
+    $(window).on('load', function() {
+        $('#txtbarcode_id').focus();
+    });
+
     //Kerkimi permes Scan Barcode
     var productarr = [];
-    $(function() {
-        $('#txtbarcode_id').on('change', function() {
-            var barcode = $("#txtbarcode_id").val();
 
+    $.ajax({
+        url: "getorderproduct.php",
+        method: "get",
+        dataType: "json",
+        data: {
+            id: <?php echo $_GET['id']; ?>
+        },
+        success: function(data) {
+            $.each(data, function(key, data) {
+                if (data && data.barcode !== undefined) {
+                    if (jQuery.inArray(data["product_id"], productarr) !== -1) {
+                        var actualqty = parseInt($('#qty_id' + data["product_id"]).val()) + 1;
+                        // var stock = data["stock"];
+
+                        $('#qty_id' + data["product_id"]).val(actualqty);
+
+                        var saleprice = parseInt(actualqty) * data["salesprice"];
+                        // console.log(saleprice.toFixed(2));
+                        $('#saleprice_id' + data["product_id"]).html(saleprice.toFixed(2));
+                        $('#saleprice_idd' + data["product_id"]).val(saleprice);
+
+                        $("#txtbarcode_id").val("");
+                        calculate(0, 0);
+                    } else {
+                        addrow(data["product_id"], data["product_name"], data["salesprice"], data["stock"], data["qty"], data["barcode"]);
+                        productarr.push(data["product_id"]);
+                        $("#txtbarcode_id").val();
+
+                        function addrow(product_id, product_name, saleprice, stock, qty, barcode) {
+                            var tr = '<tr>' +
+                                '<input type="hidden" class="form-control barcode" name="barcode_arr[]" id="barcode_id' + barcode + '" value="' + barcode + '">' +
+                                '<td style="text-align:left;vertical-align:middle; font-size:17px;"><class="form-control product_c" name="product_arr[]"<span class="badge badge-dark">' + product_name + '</span><input type="hidden" class=form-control product_c" name="product_arr[]" value="' + product_name + '"><input type="hidden" class="form-control pid" name="pid_arr[]" value="' + product_id + '"> </td>' +
+                                '<td style = "text-align:left;vertical-align:middle; font-size:17px;"><span class="badge badge-primary stocklbl" name="stock_arrr[]" id="stock_id' + product_id + '">' + stock + '</span><input type="hidden" class="form-control stock_c" name="stock_c_arr[]" id="stock_idd' + product_id + '" value="' + stock + '"></td>' +
+                                '<td style = "text-align:left;vertical-align:middle; font-size:17px;"><span class="badge badge-primary price" name="price_arr[]" id="price_id' + product_id + '">' + saleprice + '</span><input type="hidden" class="form-control price_c" name="price_c_arr[]" id="price_idd' + product_id + '" value="' + saleprice + '"></td>' +
+                                '<td><input type="text" class="form-control qty" name="quantity_arr[]" id="qty_id' + product_id + '" value="' + qty + ' " size="1"></td>' +
+                                '<td style = "text-align:left;vertical-align:middle; font-size:17px;"><span class="badge badge-danger totalamt" name="netamt_arr[]" id="saleprice_id' + product_id + '">' + qty * saleprice + '</span><input type="hidden" class="form-control saleprice" name="saleprice_arr[]" id="saleprice_idd' + product_id + '" value="' + qty * saleprice + '"></td>' +
+
+                                //Remove button//
+                                '<td><center><button type="button" name="remove" class="btn btn-danger btn-sm btnremove" data-id="' + product_id + '"><span class="fas fa-trash"></span></button></center></td>'
+                            '<tr';
+                            $('.details').append(tr);
+                            calculate(0, 0);
+                            $('#txtbarcode_id').val("");
+                        } //end function addrow
+
+                    };
+                } else {
+                    Swal.fire({
+                        title: 'Gabim!',
+                        text: 'Sasia ne depo eshte Zero, Perndryshe Produkti nuk eshte i regjistruar!',
+                        icon: 'error',
+                        // timer: 2000,
+                        // buttons: false,
+                    })
+                    $('#txtbarcode_id').val("");
+                }
+            });
+        },
+        error: function() {
+            alert("Gabim barcodi");
+        }
+    });
+    //Perfundimi i pjeses per thirje
+    $('#txtbarcode_id').keypress(function(e) {
+        var key = e.keyCode || e.which;
+
+        if (key == 13) {
+            var barcode = $("#txtbarcode_id").val();
             $.ajax({
                 url: "getproduct.php",
                 method: "get",
@@ -318,44 +348,62 @@ include_once "includes/footer.php";
                     id: barcode
                 },
                 success: function(data) {
+                    if (data && data.barcode !== undefined) {
+                        if (jQuery.inArray(data["pid"], productarr) !== -1) {
+                            var actualqty = parseInt($('#qty_id' + data["pid"]).val()) + 1;
+                            // var stock = data["stock"];
 
+                            $('#qty_id' + data["pid"]).val(actualqty);
 
-                    if (jQuery.inArray(data["pid"], productarr) !== -1) {
-                        var actualqty = parseInt($('#qty_id' + data["pid"]).val()) + 1;
-                        $('#qty_id' + data["pid"]).val(actualqty);
+                            var saleprice = parseInt(actualqty) * data["salesprice"];
+                            // console.log(saleprice.toFixed(2));
+                            $('#saleprice_id' + data["pid"]).html(saleprice.toFixed(2));
+                            $('#saleprice_idd' + data["pid"]).val(saleprice);
 
-                        var saleprice = parseInt(actualqty) * data["salesprice"];
-                        // console.log(saleprice);
-                        $('#saleprice_id' + data["pid"]).html(saleprice);
-                        $('#saleprice_idd' + data["pid"]).val(saleprice);
+                            $("#txtbarcode_id").val("");
+                            calculate(0, 0);
+                        } else {
+                            addrow(data["pid"], data["product"], data["salesprice"], data["stock"], data["barcode"]);
+                            productarr.push(data["pid"]);
+                            $("#txtbarcode_id").val();
 
-                        $("#txtbarcode_id").val("");
-                        calculate(0, 0);
+                            function addrow(pid, product, saleprice, stock, barcode) {
+                                var tr = '<tr>' +
+                                    '<input type="hidden" class="form-control barcode" name="barcode_arr[]" id="barcode_id' + barcode + '" value="' + barcode + '">' +
+                                    '<td style="text-align:left;vertical-align:middle; font-size:17px;"><class="form-control product_c" name="product_arr[]"<span class="badge badge-dark">' + product + '</span><input type="hidden" class=form-control product_c" name="product_arr[]" value="' + product + '"><input type="hidden" class="form-control pid" name="pid_arr[]" value="' + pid + '"> </?>' +
+                                    '<td style = "text-align:left;vertical-align:middle; font-size:17px;"><span class="badge badge-primary stocklbl" name="stock_arrr[]" id="stock_id' + pid + '">' + stock + '</span><input type="hidden" class="form-control stock_c" name="stock_c_arr[]" id="stock_idd' + pid + '" value="' + stock + '"></td>' +
+                                    '<td style = "text-align:left;vertical-align:middle; font-size:17px;"><span class="badge badge-primary price" name="price_arr[]" id="price_id' + pid + '">' + saleprice + '</span><input type="hidden" class="form-control price_c" name="price_c_arr[]" id="price_idd' + pid + '" value="' + saleprice + '"></td>' +
+                                    '<td><input type="text" class="form-control qty" name="quantity_arr[]" id="qty_id' + pid + '" value="' + 1 + '" size="1"></td>' +
+                                    '<td style = "text-align:left;vertical-align:middle; font-size:17px;"><span class="badge badge-danger totalamt" name="netamt_arr[]" id="saleprice_id' + pid + '">' + saleprice + '</span><input type="hidden" class="form-control saleprice" name="saleprice_arr[]" id="saleprice_idd' + pid + '" value="' + saleprice + '"></td>' +
+                                    //Remove button//
+                                    // '<td style = "text-align:left;vertical-align:middle; font-size:17px;"><center><name="remove" class="btnremove" data-id="' + pid + '"><span class="fas fa-trash" style="color:red;"></span></center></td>' +
+                                    '<td><center><button type="button" name="remove" class="btn btn-danger btn-sm btnremove" data-id="' + pid + '"><span class="fas fa-trash"></span></button></center></td>'
+                                '<tr';
+                                $('.details').append(tr);
+                                calculate(0, 0);
+                                $('#txtbarcode_id').val("");
+                            } //end function addrow
+                        };
                     } else {
-                        addrow(data["pid"], data["product"], data["salesprice"], data["stock"], data["barcode"]);
-                        productarr.push(data["pid"]);
-                        $("#txtbarcode_id").val();
-
-                        function addrow(pid, product, saleprice, stock, barcode) {
-                            var tr = '<tr>' +
-                                '<input type="hidden" class="form-control barcode" name="barcode_arr[]" id="barcode_id' + barcode + '" value="' + barcode + '">' +
-                                '<td style="text-align:left;vertical-align:middle; font-size:17px;"><class="form-control product_c" name="product_arr[]"<span class="badge badge-dark">' + product + '</span><input type="hidden" class=form-control product_c" name="product_arr[]" value="' + product + '"><input type="hidden" class="form-control pid" name="pid_arr[]" value="' + pid + '"> </>' +
-                                '<td style = "text-align:left;vertical-align:middle; font-size:17px;"><span class="badge badge-primary stocklbl" name="stock_arrr[]" id="stock_id' + pid + '">' + stock + '</span><input type="hidden" class="form-control stock_c" name="stock_c_arr[]" id="stock_idd' + pid + '" value="' + stock + '"></td>' +
-                                '<td style = "text-align:left;vertical-align:middle; font-size:17px;"><span class="badge badge-primary price" name="price_arr[]" id="price_id' + pid + '">' + saleprice + '</span><input type="hidden" class="form-control price_c" name="price_c_arr[]" id="price_idd' + pid + '" value="' + saleprice + '"></td>' +
-                                '<td><input type="text" class="form-control qty" name="quantity_arr[]" id="qty_id' + pid + '" value="' + 1 + '" size="1"></td>' +
-                                '<td style = "text-align:left;vertical-align:middle; font-size:17px;"><span class="badge badge-danger totalamt" name="netamt_arr[]" id="saleprice_id' + pid + '">' + saleprice + '</span><input type="hidden" class="form-control saleprice" name="saleprice_arr[]" id="saleprice_idd' + pid + '" value="' + saleprice + '"></td>' +
-                                //Remove button//
-                                // '<td style = "text-align:left;vertical-align:middle; font-size:17px;"><center><name="remove" class="btnremove" data-id="' + pid + '"><span class="fas fa-trash" style="color:red;"></span></center></td>' +
-                                '<td><center><button type="button" name="remove" class="btn btn-danger btn-sm btnremove" data-id="' + pid + '"><span class="fas fa-trash"></span></button></center></td>'
-                            '<tr';
-                            $('.details').append(tr);
-                            calculate(0, 0)
-                        } //end function addrow
+                        Swal.fire({
+                            title: 'Gabim!',
+                            text: 'Sasia ne depo eshte Zero, Perndryshe Produkti nuk eshte i regjistruar!',
+                            icon: 'error',
+                        })
+                        $('#txtbarcode_id').val("");
+                        // $('#txtbarcode_id').focus(); 
                     }
+
+                },
+                error: function() {
+                    alert("Gabim barcodi");
                 }
-            })
-        })
+            });
+            e.preventDefault();
+            return false;
+        }
     });
+
     //Kerkimi i Produktit permes Dropdown 
     var productarr = [];
     $(function() {
@@ -377,8 +425,7 @@ include_once "includes/footer.php";
                         $('#qty_id' + data["pid"]).val(actualqty);
 
                         var saleprice = parseInt(actualqty) * data["salesprice"];
-                        // console.log(saleprice);
-                        $('#saleprice_id' + data["pid"]).html(saleprice);
+                        $('#saleprice_id' + data["pid"]).html(saleprice.toFixed(2));
                         $('#saleprice_idd' + data["pid"]).val(saleprice);
 
                         $("#txtbarcode_id").val("");
@@ -409,8 +456,9 @@ include_once "includes/footer.php";
             })
         })
     });
+
+    //Kalkulimi mbasi e vendos sasin e produktit ne tabel
     $("#itemtable").delegate(".qty", "keyup change", function() {
-        // console.log("hello Qty");
         var quantity = $(this);
         var tr = $(this).parent().parent();
 
@@ -420,7 +468,6 @@ include_once "includes/footer.php";
 
             var result = parseFloat(quantity.val() * tr.find(".price").text());
 
-            // calculate();
             tr.find(".totalamt").text(result.toFixed(2));
             tr.find(".saleprice").val(result);
             calculate(0, 0);
@@ -431,7 +478,8 @@ include_once "includes/footer.php";
             calculate(0, 0);
         }
     });
-
+    //Kalkulimi i totalit
+    //Kalkulimi i totalit
     function calculate(dis, paid) {
         var nentotali = 0;
         var zbritja = 0;
@@ -447,11 +495,9 @@ include_once "includes/footer.php";
 
 
         $("#nentotali").val(nentotali.toFixed(2));
-        $("#zbritja_p").val(zbritja.toFixed(2));
         zbritja = (zbritjaP / 100) * nentotali;
         totali = nentotali - zbritja;
-        $("#zbritja_m").val(due.toFixed(2));
-        $("#grandTotal").val(totali.toFixed(2));
+        // $("#grandTotal").val(totali.toFixed(2));
 
 
     }
@@ -460,10 +506,9 @@ include_once "includes/footer.php";
         var discount = $("#zbritja_m").val();
         calculate(discount, paid);
     });
-
+    //Kalkulimi i zbritjes nga totali si dhe shfaqja e totalit per pages -zbritja
     $("#zbritja_p").on("keyup change", function() {
         // if (event.keyCode == 13) {
-
         var nentotali = parseFloat($("#nentotali").val());
         var zbritja_p = parseFloat($("#zbritja_p").val());
         var due = (zbritja_p / 100) * nentotali;
@@ -474,7 +519,7 @@ include_once "includes/footer.php";
         $("#grandTotal").val(pagesa.toFixed(2));
         // } else {}
     });
-
+    //Kalukilimi i totalit me pagesen kesh te cilen e bane klienti
     $("#txtpaid").on("keyup change", function() {
         // if (event.keyCode == 13) {
         var totali = parseFloat($("#grandTotal").val());
@@ -496,13 +541,9 @@ include_once "includes/footer.php";
             $("#txt_kusuri").val(result.toFixed(2));
         }
         // }
-
-
-
-
     });
 
-
+    //Buttoni per fshirjen e produkteve ne tabel mbas skenimit 
     $(document).on('click', '.btnremove', function() {
         var removed = $(this).attr("data-id");
         productarr = jQuery.grep(productarr, function(value) {
