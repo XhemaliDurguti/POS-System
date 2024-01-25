@@ -41,7 +41,91 @@ $row_invoice_details = $select->fetchAll(PDO::FETCH_ASSOC);
 
 
 if (isset($_POST['btnupdateOrder'])) {
-    echo 'Faktura u Ndryshua';
+    $txt_orderdate = date('Y-m-d');
+    $txt_subtotal = $_POST['nentotali'];
+    $txt_totali = $_POST['grandTotal'];
+    $txt_zbritjap = $_POST['zbritja_p'];
+    $txt_zbritja = $_POST['zbritja_m'];
+    $txt_mpages = $_POST['rb'];
+    $txt_kesh = $_POST['txtpaid'];
+    $txt_kusuri = $_POST['txt_kusuri'];
+
+
+    $pid_arr = $_POST['pid_arr'];
+    $barcode_arr = $_POST['barcode_arr'];
+    $name_arr = $_POST['product_arr'];
+    $stock_arr = $_POST['stock_c_arr'];
+    $quantity_arr = $_POST['quantity_arr'];
+    $price_arr = $_POST['price_c_arr'];
+    $subtotal_arr = $_POST['saleprice_arr'];
+
+
+    foreach ($row_invoice_details as $product_invoice_details) {
+        $updateproduct_stock = $pdo->prepare("update tbl_product set stock = stock+" . $product_invoice_details['qty'] . " where pid = '" . $product_invoice_details['product_id'] . "'");
+        $updateproduct_stock->execute();
+    }
+
+
+    $delete_invoice_details = $pdo->prepare("delete from tbl_invoice_details where invoice_id = $id");
+    $delete_invoice_details->execute();
+
+    //Write update  query for tbl_invoice table data
+
+    $update_tbl_invoice = $pdo->prepare("update tbl_invoice set order_date=:odate,subtotal=:subtotal,totali=:total,zbritjaPerqindje=:zp,zbritja=:zm,mPageses=:mpages,kesh=:kesh,kusuri=:kusuri where invoice_id= $id");
+    $update_tbl_invoice->bindParam(':subtotal', $txt_subtotal);
+    $update_tbl_invoice->bindParam(':subtotal', $txt_subtotal);
+    $update_tbl_invoice->bindParam(':odate', $txt_orderdate);
+    $update_tbl_invoice->bindParam(':total', $txt_totali);
+    $update_tbl_invoice->bindParam(':zp', $txt_zbritjap);
+    $update_tbl_invoice->bindParam(':zm', $txt_zbritja);
+    $update_tbl_invoice->bindParam(':mpages', $txt_mpages);
+    $update_tbl_invoice->bindParam(':kesh', $txt_kesh);
+    $update_tbl_invoice->bindParam(':kusuri', $txt_kusuri);
+
+    $update_tbl_invoice->execute();
+
+
+    $invoice_id = $pdo->lastInsertId();
+    if ($invoice_id != null) {
+        for ($i = 0; $i < count($pid_arr); $i++) {
+            $selectpdt = $pdo->prepare("select * from tbl_product where pid ='" . $pid_arr[$i] . "'");
+            $selectpdt->execute();
+
+            while ($rowpdt = $selectpdt->fetch(PDO::FETCH_OBJ)) {
+
+                $db_stock[$i] = $rowpdt->stock;
+
+                $rem_qty = $db_stock[$i] - $quantity_arr[$i];
+                if ($rem_qty < 0) {
+                    return "Blerja nuk perfundoj";
+                } else {
+                    $update = $pdo->prepare("update tbl_product set stock = '$rem_qty' where pid = '" . $pid_arr[$i] . "'");
+                    $update->execute();
+                }
+            }
+
+
+
+            $insert = $pdo->prepare("insert into tbl_invoice_details(invoice_id,product_id,barcode,product_name,qty,cmimiShitjes,subtotal,order_date)VALUES(:invid,:pid,:barkodi,:product,:qty,:cShitjes,:subtotal,:odate)");
+            $insert->bindParam(':invid', $id);
+            $insert->bindParam(':pid', $pid_arr[$i]);
+            $insert->bindParam(':barkodi', $barcode_arr[$i]);
+            $insert->bindParam(':product', $name_arr[$i]);
+            $insert->bindParam(':qty', $quantity_arr[$i]);
+            $insert->bindParam(':cShitjes', $price_arr[$i]);
+            $insert->bindParam(':subtotal', $subtotal_arr[$i]);
+            $insert->bindParam(':odate', $orderdate);
+
+            if (!$insert->execute()) {
+                print_r($insert->errorInfo());
+            } else {
+                //header('location:orderlist.php');
+                $_SESSION['status'] = "Ndryshimi i Faktures Perfundoj me sukses!!!";
+                $_SESSION['status_code'] = "success";
+                
+            }
+        }
+    }
 }
 ?>
 <style type="text/css">
@@ -538,29 +622,29 @@ include_once "includes/footer.php";
 
         if (key == 13) {
             var totali = parseFloat($("#grandTotal").val());
-                var pagesa = parseFloat($(this).val());
+            var pagesa = parseFloat($(this).val());
 
-                if (pagesa < totali) {
-                    Swal.fire({
-                        title: 'Gabim!',
-                        text: 'Pagesa nuk mund te jete me e vogel se Totali!',
-                        icon: 'error',
-                        timer: 2000,
-                        buttons: false,
-                    });
-                    
-                    $("#txtpaid").val('');
-                    $("#txt_kusuri").val('');
-                    // alert("Totali nuk mund te jete me i vogel se pagesa");
-                    e.preventDefault();
-                    return false;
-                } else {
-                    var result = pagesa - totali;
+            if (pagesa < totali) {
+                Swal.fire({
+                    title: 'Gabim!',
+                    text: 'Pagesa nuk mund te jete me e vogel se Totali!',
+                    icon: 'error',
+                    timer: 2000,
+                    buttons: false,
+                });
 
-                    $("#txt_kusuri").val(result.toFixed(2));
-                    e.preventDefault();
-                    return false;
-                }
+                $("#txtpaid").val('');
+                $("#txt_kusuri").val('');
+                // alert("Totali nuk mund te jete me i vogel se pagesa");
+                e.preventDefault();
+                return false;
+            } else {
+                var result = pagesa - totali;
+
+                $("#txt_kusuri").val(result.toFixed(2));
+                e.preventDefault();
+                return false;
+            }
         }
     });
     //Buttoni per fshirjen e produkteve ne tabel mbas skenimit 

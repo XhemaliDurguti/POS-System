@@ -77,7 +77,6 @@ include_once 'includes/header.php';
                                                     <div class="btn-group">
                                                         <a href="printbill.php?id=' . $row->invoice_id . '" class="btn btn-primary" role="button"><span class="fa fa-print" style="color:#ffffff" data-toggle="tooltip" title="Printo Fakturen"></span></a>
                                                         <a href="editorderpos.php?id=' . $row->invoice_id . '" class="btn btn-success" role="button"><span class="fa fa-edit" style="color:#ffffff" data-toggle="tooltip" title="Ndrysho Fakturen"></span></a>
-                                                        <button id=' . $row->invoice_id . ' class="btn btn-danger btndelete"><span class="fa fa-trash-alt" style="color:#ffffff" data-toggle="tooltip" title="Fshije"></span></button>
                                                     </div>
                                                 </td>
                                             </tr>';
@@ -105,42 +104,5 @@ include_once 'includes/footer.php';
     $(document).ready(function() {
         $('[data-toggle=" tooltip"]').tooltip();
     });
-    $(document).ready(function() {
-        $('.btndelete').click(function() {
-            var tdt = $(this);
-            var id = $(this).attr("id");
-
-
-            Swal.fire({
-                title: "Deshironi ta Fshini Fakturen?",
-                text: "Faktura e fshire nuk mund te kthehet!",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Po",
-                cancelButtonText:"Jo",
-            }).then((result) => {
-                if (result.isConfirmed) {
-
-                    $.ajax({
-                        url: 'productdelete.php',
-                        type: 'post',
-                        data: {
-                            pidd: id
-                        },
-                        success: function(data) {
-                            tdh.parents('tr').hide();
-                        }
-                    });
-                    Swal.fire({
-                        title: "Deleted!",
-                        text: "Produkti Juaj eshte Fshire me sukses!.",
-                        icon: "success"
-                    });
-                }
-            });
-
-        });
-    });
+    
 </script>
