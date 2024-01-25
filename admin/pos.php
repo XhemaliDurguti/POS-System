@@ -52,29 +52,28 @@ if (isset($_POST['btnSave'])) {
 
 
     $invoice_id = $pdo->lastInsertId();
-    if($invoice_id != null) {
+    if ($invoice_id != null) {
         print_r($invoice_id);
-        for($i = 0;$i < count($pid_arr);$i++) 
-        {
+        for ($i = 0; $i < count($pid_arr); $i++) {
             $rem_qty = $stock_arr[$i] - $quantity_arr[$i];
-            
-            if($rem_qty < 0){
+
+            if ($rem_qty < 0) {
                 return "Blerja nuk perfundoj";
-            }else {
-                $update =$pdo->prepare("update tbl_product set stock = '$rem_qty' where pid = '".$pid_arr[$i]."'");
+            } else {
+                $update = $pdo->prepare("update tbl_product set stock = '$rem_qty' where pid = '" . $pid_arr[$i] . "'");
                 $update->execute();
             }
 
             $insert = $pdo->prepare("insert into tbl_invoice_details(invoice_id,product_id,barcode,product_name,qty,cmimiShitjes,subtotal,order_date)VALUES(:invid,:pid,:barkodi,:product,:qty,:cShitjes,:subtotal,:odate)");
-            $insert->bindParam(':invid',$invoice_id);
+            $insert->bindParam(':invid', $invoice_id);
             $insert->bindParam(':pid', $pid_arr[$i]);
             $insert->bindParam(':barkodi', $barcode_arr[$i]);
-            $insert->bindParam(':product',$name_arr[$i]);
-            $insert->bindParam(':qty',$quantity_arr[$i]);
+            $insert->bindParam(':product', $name_arr[$i]);
+            $insert->bindParam(':qty', $quantity_arr[$i]);
             $insert->bindParam(':cShitjes', $price_arr[$i]);
             $insert->bindParam(':subtotal', $subtotal_arr[$i]);
             $insert->bindParam(':odate', $orderdate);
-            
+
             if (!$insert->execute()) {
                 print_r($insert->errorInfo());
             } else {
@@ -361,7 +360,7 @@ include_once "includes/footer.php";
                         if (jQuery.inArray(data["pid"], productarr) !== -1) {
                             var actualqty = parseInt($('#qty_id' + data["pid"]).val()) + 1;
                             // var stock = data["stock"];
-                            
+
                             $('#qty_id' + data["pid"]).val(actualqty);
 
                             var saleprice = parseInt(actualqty) * data["salesprice"];
@@ -535,27 +534,35 @@ include_once "includes/footer.php";
         // } else {}
     });
     //Kalukilimi i totalit me pagesen kesh te cilen e bane klienti
-    $("#txtpaid").on("keyup change", function() {
-        // if (event.keyCode == 13) {
-        var totali = parseFloat($("#grandTotal").val());
-        var pagesa = parseFloat($(this).val());
+    $("#txtpaid").keypress(function(e) {
+        var key = e.keyCode || e.which;
 
-        if (pagesa < totali) {
-            Swal.fire({
-                title: 'Gabim!',
-                text: 'Pagesa nuk mund te jete me e vogel se Totali!',
-                icon: 'error',
-                // timer: 2000,
-                // buttons: false,
-            })
-            $("#txtpaid").val('');
-            $("#txt_kusuri").val('');
-        } else {
-            var result = pagesa - totali;
+        if (key == 13) {
+            var totali = parseFloat($("#grandTotal").val());
+            var pagesa = parseFloat($(this).val());
 
-            $("#txt_kusuri").val(result.toFixed(2));
+            if (pagesa < totali) {
+                Swal.fire({
+                    title: 'Gabim!',
+                    text: 'Pagesa nuk mund te jete me e vogel se Totali!',
+                    icon: 'error',
+                    timer: 2000,
+                    buttons: false,
+                });
+
+                $("#txtpaid").val('');
+                $("#txt_kusuri").val('');
+                // alert("Totali nuk mund te jete me i vogel se pagesa");
+                e.preventDefault();
+                return false;
+            } else {
+                var result = pagesa - totali;
+
+                $("#txt_kusuri").val(result.toFixed(2));
+                e.preventDefault();
+                return false;
+            }
         }
-        // }
     });
 
     //Buttoni per fshirjen e produkteve ne tabel mbas skenimit 

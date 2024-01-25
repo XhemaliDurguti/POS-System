@@ -301,13 +301,14 @@ include_once "includes/footer.php";
                         $("#txtbarcode_id").val();
 
                         function addrow(product_id, product_name, saleprice, stock, qty, barcode) {
+                            var r = qty * saleprice;
                             var tr = '<tr>' +
                                 '<input type="hidden" class="form-control barcode" name="barcode_arr[]" id="barcode_id' + barcode + '" value="' + barcode + '">' +
                                 '<td style="text-align:left;vertical-align:middle; font-size:17px;"><class="form-control product_c" name="product_arr[]"<span class="badge badge-dark">' + product_name + '</span><input type="hidden" class=form-control product_c" name="product_arr[]" value="' + product_name + '"><input type="hidden" class="form-control pid" name="pid_arr[]" value="' + product_id + '"> </td>' +
                                 '<td style = "text-align:left;vertical-align:middle; font-size:17px;"><span class="badge badge-primary stocklbl" name="stock_arrr[]" id="stock_id' + product_id + '">' + stock + '</span><input type="hidden" class="form-control stock_c" name="stock_c_arr[]" id="stock_idd' + product_id + '" value="' + stock + '"></td>' +
                                 '<td style = "text-align:left;vertical-align:middle; font-size:17px;"><span class="badge badge-primary price" name="price_arr[]" id="price_id' + product_id + '">' + saleprice + '</span><input type="hidden" class="form-control price_c" name="price_c_arr[]" id="price_idd' + product_id + '" value="' + saleprice + '"></td>' +
                                 '<td><input type="text" class="form-control qty" name="quantity_arr[]" id="qty_id' + product_id + '" value="' + qty + ' " size="1"></td>' +
-                                '<td style = "text-align:left;vertical-align:middle; font-size:17px;"><span class="badge badge-danger totalamt" name="netamt_arr[]" id="saleprice_id' + product_id + '">' + qty * saleprice + '</span><input type="hidden" class="form-control saleprice" name="saleprice_arr[]" id="saleprice_idd' + product_id + '" value="' + qty * saleprice + '"></td>' +
+                                '<td style = "text-align:left;vertical-align:middle; font-size:17px;"><span class="badge badge-danger totalamt" name="netamt_arr[]" id="saleprice_id' + product_id + '">' + r.toFixed(2) + '</span><input type="hidden" class="form-control saleprice" name="saleprice_arr[]" id="saleprice_idd' + product_id + '" value="' + qty * saleprice + '"></td>' +
 
                                 //Remove button//
                                 '<td><center><button type="button" name="remove" class="btn btn-danger btn-sm btnremove" data-id="' + product_id + '"><span class="fas fa-trash"></span></button></center></td>'
@@ -361,6 +362,8 @@ include_once "includes/footer.php";
                             $('#saleprice_idd' + data["pid"]).val(saleprice);
 
                             $("#txtbarcode_id").val("");
+                            $('#txtpaid').val('0.00');
+                            $('#txt_kusuri').val('0.00');
                             calculate(0, 0);
                         } else {
                             addrow(data["pid"], data["product"], data["salesprice"], data["stock"], data["barcode"]);
@@ -382,6 +385,8 @@ include_once "includes/footer.php";
                                 $('.details').append(tr);
                                 calculate(0, 0);
                                 $('#txtbarcode_id').val("");
+                                $('#txtpaid').val('0.00');
+                                $('#txt_kusuri').val('0.00');
                             } //end function addrow
                         };
                     } else {
@@ -430,6 +435,8 @@ include_once "includes/footer.php";
 
                         $("#txtbarcode_id").val("");
                         calculate(0, 0);
+                        $('#txtpaid').val('0.00');
+                        $('#txt_kusuri').val('0.00');
                     } else {
                         addrow(data["pid"], data["product"], data["salesprice"], data["stock"], data["barcode"]);
                         productarr.push(data["pid"]);
@@ -449,7 +456,8 @@ include_once "includes/footer.php";
                             '<tr';
                             $('.details').append(tr);
                             calculate(0, 0);
-
+                            $('#txtpaid').val('0.00');
+                            $('#txt_kusuri').val('0.00');
                         } //end function addrow
                     }
                 }
@@ -476,9 +484,11 @@ include_once "includes/footer.php";
             tr.find(".totalamt").text(result.toFixed(2));
             tr.find(".saleprice").val(result);
             calculate(0, 0);
+            $('#txt_kusuri').val('0.00');
+            $('#txtpaid').val('0.00');
         }
     });
-    //Kalkulimi i totalit
+
     //Kalkulimi i totalit
     function calculate(dis, paid) {
         var nentotali = 0;
@@ -497,7 +507,7 @@ include_once "includes/footer.php";
         $("#nentotali").val(nentotali.toFixed(2));
         zbritja = (zbritjaP / 100) * nentotali;
         totali = nentotali - zbritja;
-        // $("#grandTotal").val(totali.toFixed(2));
+        $("#grandTotal").val(totali.toFixed(2));
 
 
     }
@@ -517,32 +527,42 @@ include_once "includes/footer.php";
         var discont = nentotali - pagesa;
         $("#zbritja_m").val(discont.toFixed(2));
         $("#grandTotal").val(pagesa.toFixed(2));
+        $('#txtpaid').val('0.00');
+        $('#txt_kusuri').val('0.00');
         // } else {}
     });
     //Kalukilimi i totalit me pagesen kesh te cilen e bane klienti
-    $("#txtpaid").on("keyup change", function() {
-        // if (event.keyCode == 13) {
-        var totali = parseFloat($("#grandTotal").val());
-        var pagesa = parseFloat($(this).val());
 
-        if (pagesa < totali) {
-            Swal.fire({
-                title: 'Gabim!',
-                text: 'Pagesa nuk mund te jete me e vogel se Totali!',
-                icon: 'error',
-                // timer: 2000,
-                // buttons: false,
-            })
-            $("#txtpaid").val('');
-            $("#txt_kusuri").val('');
-        } else {
-            var result = pagesa - totali;
+    $("#txtpaid").keypress(function(e) {
+        var key = e.keyCode || e.which;
 
-            $("#txt_kusuri").val(result.toFixed(2));
+        if (key == 13) {
+            var totali = parseFloat($("#grandTotal").val());
+                var pagesa = parseFloat($(this).val());
+
+                if (pagesa < totali) {
+                    Swal.fire({
+                        title: 'Gabim!',
+                        text: 'Pagesa nuk mund te jete me e vogel se Totali!',
+                        icon: 'error',
+                        timer: 2000,
+                        buttons: false,
+                    });
+                    
+                    $("#txtpaid").val('');
+                    $("#txt_kusuri").val('');
+                    // alert("Totali nuk mund te jete me i vogel se pagesa");
+                    e.preventDefault();
+                    return false;
+                } else {
+                    var result = pagesa - totali;
+
+                    $("#txt_kusuri").val(result.toFixed(2));
+                    e.preventDefault();
+                    return false;
+                }
         }
-        // }
     });
-
     //Buttoni per fshirjen e produkteve ne tabel mbas skenimit 
     $(document).on('click', '.btnremove', function() {
         var removed = $(this).attr("data-id");
