@@ -82,37 +82,6 @@ if (isset($_POST['btnSave'])) {
             }
         }
     }
-    // $invoice_id = $pdo->lastInsertId();
-
-    // if ($invoice_id != null) {
-    //     for ($i = 0; $i < count($pid_arr); $i++) {
-    //         $rem_qty = $stock_arr[$i] - $quantity_arr[$i];
-
-    //         if ($rem_qty < 0) {
-    //             return "Blera nuk perfundoj!";
-    //         } else {
-    //             $update = $pdo->prepare("update tbl_product set stock = '$rem_qty' where pid = '" . $pid_arr[$i] . "'");
-    //             $update->execute();
-    //         }
-
-    //         $insert = $pdo->prepare("insert into tbl_invoice_details(invoice_id,barcode,product_id,product_name,qty,cmimiShitjes,subtotal,order_date)values(:invid,:barkode,:pid,:pname,:qty,:cShitjes,:stotal,:odate)");
-    //         $insert->bindParam(':invid', $invoice_id);
-    //         $insert->bindParam(':barkode', $barcode_arr[$i]);
-    //         $insert->bindParam(':pid', $price_arr[$i]);
-    //         $insert->bindParam(':pname', $name_arr[$i]);
-    //         $insert->bindParam(':qty', $quantity_arr[$i]);
-    //         $insert->bindParam(':cShitjes', $price_arr[$i]);
-    //         $insert->bindParam(':stotal', $subtotal_arr[$i]);
-    //         $insert->bindParam(':odate', $orderdate);
-
-    //         if (!$insert->execute()) {
-    //             print_r($insert->errorInfo());
-    //         } else {
-    //             $_SESSION['status'] = "Blerja Perfundoj me Sukses!!";
-    //             $_SESSION['status_code'] = "success";
-    //         }
-    //     }
-    // }
 }
 
 ?>

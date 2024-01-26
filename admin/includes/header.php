@@ -264,38 +264,22 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                 <li class="nav-item">
                                     <a href="orderlist.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Raporti i Shitjes Sod</p>
+                                        <p>Raporti i Shitjes Ditore</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a href="orderlist.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Raporti i Shitjes Sod</p>
+                                        <p>Raporti i Shitjes Javore</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a href="orderlist.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Raporti i Shitjes Sod</p>
+                                        <p>Raporti i Shitjes Mujore</p>
                                     </a>
                                 </li>
                             </ul>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-list"></i>
-                                <p>
-                                    Lista Porosive
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="taxids.php" class="nav-link">
-                                <i class="nav-icon fas fa-calculator"></i>
-                                <p>
-                                    Zbritjet
-                                </p>
-                            </a>
                         </li>
                         <li class="nav-item">
                             <a href="registration.php" class="nav-link">
