@@ -40,8 +40,7 @@ if (isset($_POST['ndryshoFjalkalimin'])) {
             $_SESSION['status'] = "Fjalkalimi Ri nuk Pershtatet";
             $_SESSION['status_code'] = "error";
         }
-        // $_SESSION['status'] = "Fjalkalimi Pershtatet";
-        // $_SESSION['status_code'] = "success";
+        
     }else 
     {
         $_SESSION['status'] = "Fjalkalimi nuk Pershtatet";
@@ -133,7 +132,7 @@ include_once "includes/header.php";
 </aside>
 <!-- /.control-sidebar -->
 <?php
-include_once "../includes/footer.php";
+include_once "includes/footer.php";
 ?>
 <?php
 if (isset($_SESSION['status']) && $_SESSION['status'] != '') {
