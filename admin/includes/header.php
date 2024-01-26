@@ -268,13 +268,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="orderlist.php" class="nav-link">
+                                    <a href="week.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Raporti i Shitjes Javore</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="orderlist.php" class="nav-link">
+                                    <a href="month.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Raporti i Shitjes Mujore</p>
                                     </a>
