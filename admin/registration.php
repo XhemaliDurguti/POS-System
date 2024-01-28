@@ -28,6 +28,7 @@ if (isset($_POST['btnsave'])) {
     $userpass = $_POST['txtpassword'];
     $userrole = $_POST['txtselect_option'];
 
+    $hashP = password_hash($userpass,PASSWORD_DEFAULT);
 
     if (isset($_POST['txtemail'])) {
         $select = $pdo->prepare("select useremail from tbl_user where useremail = '$useremail'");
@@ -41,7 +42,7 @@ if (isset($_POST['btnsave'])) {
             // $insert = $pdo->prepare("INSERT INTO tbl_user(userid, username, useremail, userpassword,role) values(:name,:email,:pass,:role)");
             $insert->bindParam(':name', $username);
             $insert->bindParam(':email', $useremail);
-            $insert->bindParam(':pass', $userpass);
+            $insert->bindParam(':pass', $hashP);
             $insert->bindParam(':role', $userrole);
             if ($insert->execute()) {
                 $_SESSION['status'] = "Punetori u Regjistrua me Sukses!";

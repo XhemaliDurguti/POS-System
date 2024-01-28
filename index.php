@@ -5,34 +5,39 @@ if (isset($_POST['btn_login'])) {
     $email = $_POST['txt_emaili'];
     $pasword = $_POST['txt_fjalkalimi'];
 
-    $select = $pdo->prepare("SELECT * FROM tbl_user WHERE useremail = '$email' AND userpassword= '$pasword'");
+    $select = $pdo->prepare("SELECT * FROM tbl_user WHERE useremail = '$email' ");
     $select->execute();
 
     $row = $select->fetch(PDO::FETCH_ASSOC);
 
     if (is_array($row)) {
-        if ($row['useremail'] == $email and $row['userpassword'] == $pasword and $row['role'] == 'Admin') {
-            $_SESSION['status'] = "Jeni identifikuar si Administrator";
-            $_SESSION['status_code'] = "sussess";
-            header('refresh:1;admin/dashboard.php');
+        $db_pass = $row['userpassword'];
+        if(password_verify($pasword,$db_pass)) {
+            // header('Location:admin/dashboard.php');
+            if ($row['useremail'] == $email and $row['role'] == 'Admin') {
+                $_SESSION['status'] = "Jeni identifikuar si Administrator";
+                $_SESSION['status_code'] = "sussess";
+                header('refresh:1;admin/dashboard.php');
 
-            $_SESSION['userid'] = $row['userid'];
-            $_SESSION['username'] = $row['username'];
-            $_SESSION['useremail'] = $row['useremail'];
-            $_SESSION['role'] = $row['role'];
-        } else if ($row['useremail'] == $email and $row['userpassword'] == $pasword and $row['role'] == 'User') {
-            echo $success = "U Identifikuat si User!";
-            header('refresh:1;user/dashboard.php');
-            $_SESSION['userid'] = $row['userid'];
-            $_SESSION['username'] = $row['username'];
-            $_SESSION['useremail'] = $row['useremail'];
-            $_SESSION['role'] = $row['role'];
+                $_SESSION['userid'] = $row['userid'];
+                $_SESSION['username'] = $row['username'];
+                $_SESSION['useremail'] = $row['useremail'];
+                $_SESSION['role'] = $row['role'];
+            } else if ($row['useremail'] == $email and $row['role'] == 'Punetor') {
+                echo $success = "U Identifikuat si User!";
+                header('refresh:1;user/dashboard.php');
+                $_SESSION['userid'] = $row['userid'];
+                $_SESSION['username'] = $row['username'];
+                $_SESSION['useremail'] = $row['useremail'];
+                $_SESSION['role'] = $row['role'];
+            }
+        } else {
+            // echo $success = "Emaili/Fjalkalimi gabim!";
+
+            $_SESSION['status'] = "Emaili/Fjalkalimin nuk e keni shtypur!";
+            $_SESSION['status_code'] = "error";
         }
-    } else {
-        // echo $success = "Emaili/Fjalkalimi gabim!";
-
-        $_SESSION['status'] = "Emaili/Fjalkalimin nuk e keni shtypur!";
-        $_SESSION['status_code'] = "error";
+    
     }
 }
 

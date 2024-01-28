@@ -81,41 +81,6 @@ if (isset($_POST['updateProfile'])) {
         $_SESSION['status'] = "Fjalkalimi Ri nuk Pershtatet";
         $_SESSION['status_code'] = "error";
     }
-    
-    
-    // else if ($txtfjalkalimi == $txtfjalkalimip) {
-    //     $update_profile = $pdo->prepare("update tbl_user set username =:user,userpassword=:pass,useremail=:email where userid=$id");
-    //     $update_profile->bindParam(':user', $txtusername);
-    //     $update_profile->bindParam(':pass', $txtfjalkalimi);
-    //     $update_profile->bindParam(':email', $txtemaili);
-    //     if ($update_profile->execute()) {
-    //         $_SESSION['status'] = "Te Dhenat u ndryshuan me sukses!";
-    //         $_SESSION['status_code'] = "success";
-    //     } else {
-    //         $_SESSION['status'] = "Diqka shkoj gabim,Te dhenat nuk u Ndryshua!";
-    //         $_SESSION['status_code'] = "error";
-    //     }
-    // } else {
-    //     $_SESSION['status'] = "Fjalkalimi Ri nuk Pershtatet";
-    //     $_SESSION['status_code'] = "error";
-    // }
-
-    // if ($txtfjalkalimi == $txtfjalkalimip) {
-    //     $update_profile = $pdo->prepare("update tbl_user set username=:user,userpassword=:pass where userid= $id");
-    //     $update_profile->bindParam(':user', $username);
-    //     $update_profile->bindParam(':pass', $fjalkalimi);
-
-    //     if ($update_profile->execute()) {
-    //         $_SESSION['status'] = "Te Dhenat u ndryshuan me sukses!";
-    //         $_SESSION['status_code'] = "success";
-    //     } else {
-    //         $_SESSION['status'] = "Diqka shkoj gabim,Te dhenat nuk u Ndryshua!";
-    //         $_SESSION['status_code'] = "error";
-    //     }
-    // } else {
-    //     $_SESSION['status'] = "Fjalkalimi Ri nuk Pershtatet";
-    //     $_SESSION['status_code'] = "error";
-    // }
 }
 ?>
 <div class="content-wrapper">
