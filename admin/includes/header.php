@@ -1,7 +1,17 @@
 <?php
+ob_start();
 if ($_SESSION['useremail'] == "" or $_SESSION['role'] == 'User') {
     header('location:../index.php');
+    exit();
 }
+
+include_once "../include/db.php";
+
+$id = $_SESSION['userid'];
+$select_user = $pdo->prepare("select * from tbl_user where userid = $id");
+$select_user->execute();
+$row = $select_user->fetch(PDO::FETCH_ASSOC);
+// exit();
 ?>
 <!DOCTYPE html>
 <!--
@@ -71,10 +81,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <!-- Sidebar user panel (optional) -->
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                     <div class="image">
-                        <img src="../dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+                        <img src="../avatar/<?php echo $row['avatar'];?>" class="img-circle elevation-2" alt="User Image">
                     </div>
                     <div class="info">
-                        <a href="profile.php?id=<?php echo $_SESSION['userid'];?>" class="d-block"><?php echo $_SESSION['username']; ?></a>
+                        <a href="profile.php?id=<?php echo $_SESSION['userid']; ?>" class="d-block"><?php echo $row['fName'].' '.$row['lName'];?></a>
                     </div>
                 </div>
 

@@ -26,8 +26,8 @@ if (isset($_POST['btneditproduct'])) {
     $stock = $_POST['txtstock'];
     $purchaseprice = $_POST['txtpurchaseprice'];
     $salesprice = $_POST['txtsalesprice'];
-    // $image = $_POST['productimage'];
 
+    
     $f_name = $_FILES['myfile']['name'];
     
     if(!empty($f_name)){
