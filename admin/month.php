@@ -51,7 +51,7 @@ include_once 'includes/header.php';
                                 <tbody>
                                     <?php
                                     $i = 1;
-                                    $select = $pdo->prepare("select * from tbl_invoice where week(order_date,1) = week(now(),1) and dayofweek(order_date)");
+                                    $select = $pdo->prepare("select * from tbl_invoice where Month(order_date) = month(NOW()) AND Year(order_date) = YEAR(NOW())");
                                     $select->execute();
                                     while ($row = $select->fetch(PDO::FETCH_OBJ)) {
                                         echo '<tr>

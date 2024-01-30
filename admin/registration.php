@@ -6,14 +6,14 @@ session_start();
 include_once "includes/header.php";
 error_reporting(0);
 
-$id =$_GET['id'];
+$id = $_GET['id'];
 
-if(isset($id)) {
-    $delete= $pdo->prepare("delete from tbl_user where userid = ".$id);
-    if($delete->execute()){
+if (isset($id)) {
+    $delete = $pdo->prepare("delete from tbl_user where userid = " . $id);
+    if ($delete->execute()) {
         $_SESSION['status'] = "Punetori eshte fshir nga lista me sukses!";
         $_SESSION['status_code'] = "success";
-    }else {
+    } else {
         $_SESSION['status'] = "Diqka shkoj gabim gjate fshirjes se punetorit!!!";
         $_SESSION['status_code'] = "error";
     }
@@ -23,23 +23,26 @@ if(isset($id)) {
 
 
 if (isset($_POST['btnsave'])) {
+    $emri = $_POST['txtemri'];
+    $mbiemri = $_POST['txtmbiemri'];
     $username = $_POST['txtusername'];
     $useremail = $_POST['txtemail'];
     $userpass = $_POST['txtpassword'];
     $userrole = $_POST['txtselect_option'];
 
-    $hashP = password_hash($userpass,PASSWORD_DEFAULT);
+    $hashP = password_hash($userpass, PASSWORD_DEFAULT);
 
     if (isset($_POST['txtemail'])) {
         $select = $pdo->prepare("select useremail from tbl_user where useremail = '$useremail'");
         $select->execute();
 
-        if($select->rowCount()>0){
+        if ($select->rowCount() > 0) {
             $_SESSION['status'] = "Punetori me kete email eshte i regjistruar me heret!!";
             $_SESSION['status_code'] = "warning";
-        }else {
-            $insert = $pdo->prepare("insert into tbl_user(username, useremail, userpassword,role)values(:name,:email,:pass,:role)");
-            // $insert = $pdo->prepare("INSERT INTO tbl_user(userid, username, useremail, userpassword,role) values(:name,:email,:pass,:role)");
+        } else {
+            $insert = $pdo->prepare("insert into tbl_user(fName,lName,username, useremail, userpassword,role)values(:fname,:lname,:name,:email,:pass,:role)");
+            $insert->bindParam(':fname', $emri);
+            $insert->bindParam(':lname', $mbiemri);
             $insert->bindParam(':name', $username);
             $insert->bindParam(':email', $useremail);
             $insert->bindParam(':pass', $hashP);
@@ -54,7 +57,34 @@ if (isset($_POST['btnsave'])) {
         }
     }
 }
+if(isset($_POST['btnUpdate'])) {
+    $userid = $_POST['userid'];
+    $emri = $_POST['txtemri'];
+    $mbiemri = $_POST['txtmbiemri'];
+    $username = $_POST['txtusername'];
+    $useremail = $_POST['txtemail'];
+    $userpass = $_POST['txtpassword'];
+    $userrole = $_POST['txtselect_option'];
 
+    $update_user = $pdo->prepare("update tbl_user set fName =:emri,lName=:mbiemri,username=:username,useremail=:email,userpassword=:password,role=:roli where userid = $userid");
+    $update_user->bindParam(':emri',$emri);
+    $update_user->bindParam(':mbiemri',$mbiemri);
+    $update_user->bindParam(':username',$username);
+    $update_user->bindParam(':email',$useremail);
+    $update_user->bindParam(':password',$userpass);
+    $update_user->bindParam(':roli',$userrole);
+
+    if($update_user->execute()) {
+        $_SESSION['status'] = "Te Dhenat u ndryshuan me sukses!!";
+        $_SESSION['status_code'] = "success";
+    }else {
+        $_SESSION['status'] = "Diqka Shkoj gabim!";
+        $_SESSION['status_code'] = "warning";
+    }
+    
+
+
+}
 ?>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -86,72 +116,148 @@ if (isset($_POST['btnsave'])) {
                             <h5 class="m-0">Regjistrimi i Punetoreve</h5>
                         </div>
                         <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <form action="" method="post">
-                                        <div class="card-body">
-                                            <div class="form-group">
-                                                <label for="exampleInputEmail1">Username</label>
-                                                <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Shtyp username" name="txtusername" required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="exampleInputEmail1">Email</label>
-                                                <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Shtyp email" name="txtemail" required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="exampleInputPassword1">Fjalkalimi</label>
-                                                <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Fjalkalimi" name="txtpassword" required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Roli</label>
-                                                <select class="form-control" name="txtselect_option" required>
-                                                    <option value="" disabled selected>Cakto Rolin</option>
-                                                    <option>Admin</option>
-                                                    <option>Punetor</option>
-                                                </select>
-                                            </div>
+                            <form action="" method="post">
+
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <?php
+                                        if (isset($_POST['btnedit'])) {
+                                            $select_user = $pdo->prepare("select * from tbl_user where userid =".$_POST['btnedit']);
+                                            $select_user->execute();
+                                            $row = $select_user->fetch(PDO::FETCH_OBJ);
+                                            ?>
+                                                <div class="card-body">
+                                                    <div class="form-group">
+                                                        <label>Emri</label>
+                                                        <input type="hidden" class="form-control" name="userid" value="<?php echo $row->userid;?>">
+                                                        <input type="text" class="form-control" id="username"  name="txtemri" value="<?php echo $row->fName;?>">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>Mbiemri</label>
+                                                        <input type="text" class="form-control" id="username" name="txtmbiemri" value="<?php echo $row->lName;?>">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>Username</label>
+                                                        <input type="text" class="form-control" id="username" name="txtusername" value="<?php echo $row->username ;?>">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>Email</label>
+                                                        <input type="email" class="form-control" id="exampleInputEmail1" name="txtemail" value="<?php echo $row->useremail;?>">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>Fjalkalimi</label>
+                                                        <input type="password" class="form-control" name="txtpassword" value="<?php echo $row->userpassword ;?>">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>Roli</label>
+                                                        <select class="form-control" name="txtselect_option">
+
+                                                            <option value="" disabled selected>Cakto Rolin</option>
+                                                            <option value="Admin"<?php if($row->role == 'Admin') echo 'selected'?>>Admin</option>
+                                                            <option value="Punetor" <?php if($row->role == 'Punetor') echo 'selected';?>>Punetor</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                        <!-- /.card-body -->
+
+                                        <div class="card-footer">
+                                            <button type="submit" class="btn btn-warning" name="btnUpdate">Ndrysho</button>
                                         </div>
+                                        <?php
+                                        } else {
+                                        ?>
+                                                <div class="card-body">
+                                                    <div class="form-group">
+                                                        <label>Emri</label>
+                                                        <input type="text" class="form-control" id="username" placeholder="Shtyp emri" name="txtemri">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>Mbiemri</label>
+                                                        <input type="text" class="form-control" id="username" placeholder="Shtyp mbiemrin" name="txtmbiemri">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>Username</label>
+                                                        <input type="text" class="form-control" id="username" placeholder="Shtyp username" name="txtusername" >
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>Email</label>
+                                                        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Shtyp email" name="txtemail">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>Fjalkalimi</label>
+                                                        <input type="password" class="form-control" placeholder="Fjalkalimi" name="txtpassword">
+                                                        <!-- <input type="password" class="form-control" name="txtpassword" placeholder="Fjalklimi"/> -->
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>Roli</label>
+                                                        <select class="form-control" name="txtselect_option">
+                                                            <option value="" disabled selected>Cakto Rolin</option>
+                                                            <option>Admin</option>
+                                                            <option>Punetor</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
                                         <!-- /.card-body -->
 
                                         <div class="card-footer">
                                             <button type="submit" class="btn btn-primary" name="btnsave">Regjistro</button>
                                         </div>
-                                    </form>
-                                </div>
-                                <div class="col-md-8">
-                                    <table class="table table-striped table-hover">
-                                        <thead>
-                                            <tr>
-                                                <td>#</td>
-                                                <td>Username</td>
-                                                <td>Email</td>
-                                                <td>Roli</td>
-                                                <td>Action</td>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php
-                                            $select = $pdo->prepare("SELECT * FROM tbl_user order by userid desc");
-                                            $select->execute();
+                                    <?php
+                                        }
+                                        ?>
 
-                                            while ($row = $select->fetch(PDO::FETCH_OBJ)) {
-                                                echo '
+
+                                    </div>
+                                    <div class="col-md-8">
+                                        <table class="table table-striped table-hover" id="table_worker">
+                                            <thead>
+                                                <tr>
+                                                    <td>#</td>
+                                                    <td>Emri</td>
+                                                    <td>Mbiemri</td>
+                                                    <td>Username</td>
+                                                    <td>Email</td>
+                                                    <td>Fjalkalimi</td>
+                                                    <td>Roli</td>
+                                                    <td>Action</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php
+                                                $select = $pdo->prepare("SELECT * FROM tbl_user order by userid desc");
+                                                $select->execute();
+
+                                                while ($row = $select->fetch(PDO::FETCH_OBJ)) {
+                                                    echo '
                                                         <tr>
                                                             <td>' . $row->userid . '</td>
+                                                            <td>' . $row->fName . '</td>
+                                                            <td>' . $row->lName . '</td>
+                                                            
                                                             <td>' . $row->username . '</td>
                                                             <td>' . $row->useremail . '</td>
-                                                            <td>' . $row->role . '</td>
+                                                            <td>' . str_repeat('*', strlen(substr($row->userpassword, 0, 4))) . '</td>';
+                                                    if ($row->role == "Admin") {
+                                                        echo '<td><span class="badge badge-success">' . $row->role . '</span></td>';
+                                                    } else if ($row->role == "Punetor") {
+                                                        echo '<td><span class="badge badge-info">' . $row->role . '</span></td>';
+                                                    }
+                                                    echo '
                                                             <td>
-                                                                <a href="registration.php?id='.$row->userid.'" class="btn btn-danger"><i class="fa fa-trash-alt"></i></a>
+                                                                <div class="btn-group">
+                                                                    <button type="submit" class="btn btn-primary btn-xs" value="' . $row->userid . '" name="btnedit"><i class="fa fa-edit"></i></button>
+                                                                    <a href="registration.php?id=' . $row->userid . '" class="btn btn-danger btn-xs"><i class="fa fa-trash-alt"></i></a>
+                                                                </div>
                                                             </td>
                                                         </tr>
                                                     ';
-                                            }
-                                            ?>
-                                        </tbody>
-                                    </table>
+                                                }
+                                                ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
-                            </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -167,3 +273,13 @@ if (isset($_POST['btnsave'])) {
 <?php
 include_once "includes/footer.php";
 ?>
+<script>
+    $(document).ready(function() {
+        $('#table_worker').DataTable();
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>

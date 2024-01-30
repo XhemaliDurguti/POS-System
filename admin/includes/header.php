@@ -184,14 +184,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="changepassword.php" class="nav-link">
-                                <i class="nav-icon fas fa-user-lock"></i>
-                                <p>
-                                    Ndrysho Fjalkalimin
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
                             <a href="../logout.php" class="nav-link">
                                 <i class="nav-icon fas fa-th"></i>
                                 <p>
