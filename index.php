@@ -25,7 +25,7 @@ if (isset($_POST['btn_login'])) {
                 $_SESSION['role'] = $row['role'];
             } else if ($row['useremail'] == $email and $row['role'] == 'Punetor') {
                 echo $success = "U Identifikuat si User!";
-                header('refresh:1;user/dashboard.php');
+                header('refresh:1;user/pos.php');
                 $_SESSION['userid'] = $row['userid'];
                 $_SESSION['username'] = $row['username'];
                 $_SESSION['useremail'] = $row['useremail'];

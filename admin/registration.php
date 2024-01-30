@@ -66,12 +66,14 @@ if(isset($_POST['btnUpdate'])) {
     $userpass = $_POST['txtpassword'];
     $userrole = $_POST['txtselect_option'];
 
+    $hashPU = password_hash($userpass,PASSWORD_DEFAULT);
+
     $update_user = $pdo->prepare("update tbl_user set fName =:emri,lName=:mbiemri,username=:username,useremail=:email,userpassword=:password,role=:roli where userid = $userid");
     $update_user->bindParam(':emri',$emri);
     $update_user->bindParam(':mbiemri',$mbiemri);
     $update_user->bindParam(':username',$username);
     $update_user->bindParam(':email',$useremail);
-    $update_user->bindParam(':password',$userpass);
+    $update_user->bindParam(':password',$hashPU);
     $update_user->bindParam(':roli',$userrole);
 
     if($update_user->execute()) {
