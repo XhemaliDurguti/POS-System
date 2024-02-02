@@ -45,7 +45,7 @@
 
 
     $pdf->SetX(7);
-    $pdf->SetFont('Courier','B',8);
+    $pdf->SetFont('Helvetica','B',8);
     $pdf->Cell(34,5,'Produkti',1,0,'L');
     $pdf->Cell(11, 5, 'Sasia', 1, 0, 'C');
     $pdf->Cell(12, 5, 'Cmimi', 1, 0, 'C');
@@ -54,12 +54,12 @@
 
     $select=$pdo->prepare("select * from tbl_invoice_details  where invoice_id = $id");
     $select->execute();
-    // $row=$select->fetch(PDO::FETCH_OBJ);
+   
 
     while($product=$select->fetch(PDO::FETCH_OBJ))
     {
         $pdf->SetX(7);
-        $pdf->SetFont('Helvetica','B',8);
+        $pdf->SetFont('Helvetica','',8);
         $pdf->Cell(34,5,$product->product_name,1,0,'L');
         $pdf->Cell(11, 5, $product->qty, 1, 0, 'C');
         $pdf->Cell(12, 5, $product->cmimiShitjes, 1, 0, 'C');
@@ -82,8 +82,11 @@
     $pdf->SetFont('Courier', 'B', 8);
     $pdf->Cell(45, 5, '', 0, 0, 'L');
     $pdf->Cell(12, 5, 'Kusuri', 1, 0, 'C');
-    $pdf->Cell(12, 5, $row->kusuri, 1, 1, 'C'); 
+    $pdf->Cell(12, 5, $row->kusuri, 1, 1, 'C');
 
+
+// header('Content-Type: application/pdf');
+header('Content-Type: application/pdf');
     $pdf->Output();
     
 ?>

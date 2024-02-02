@@ -79,6 +79,7 @@ if (isset($_POST['btnSave'])) {
             } else {
                 $_SESSION['status'] = "Blerja Perfundoj me Sukses!!";
                 $_SESSION['status_code'] = "success";
+                header('Location:printbill.php?id='. $invoice_id);
             }
         }
     }
